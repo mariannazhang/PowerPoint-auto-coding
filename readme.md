@@ -23,17 +23,11 @@ And there are 2 setup/save macros:
 
 
 # Getting started
-In the same directory as your stimuli:
-1. Create an empty data.xlsx file.
-
-In PowerPoint:
-2. Add the Developer menu to your ribbon. Home > Options > Customize Ribbon > Scroll down and check "Developer". Under Developer menu, click "Macro Security" to make sure macros are enabled.
+1. In the same directory as your stimuli, create an empty data.xlsx file.
+2. Open PowerPoint. Add the Developer menu to your ribbon. Home > Options > Customize Ribbon > Scroll down and check "Developer". Under Developer menu, click "Macro Security" to make sure macros are enabled.
 3. If you are using the measures_buttonName series of macros, set object names in PowerPoint via Selection Pane: Home > Editing > Select > Selection Pane. Double click an object in the Selection Pane to edit its name.
 4. Link your objects to whatever macros you want to use. Insert > Link or Action > Run a macro > select your macro. There's no easy to way to see at a glance if your macro is linked, besides trying to reinsert macro link, so be careful about this!
-* Note: if you rename a macro, you'll need to relink the buttons that used to reference that macro to that macro.
-
-In VBA (PowerPoint > Developer > Visual Basic)
-5. In the left-hand Project Manager sidebar, click "Module 1" to bring up the main code, and customize the setup macro as desired.
+5. Now open VBA (Developer menu > Visual Basic). In the left-hand Project Manager sidebar, click "Module 1" to bring up the main code, and customize the setup macro as desired.
 6. In the left-hand Project Manager sidebar, click "UserForm" to customize the userform associated with setup.
 7. If you are on a Mac, edit the filepath in the SaveToExcel macro to Mac filepath syntax.
 
@@ -50,6 +44,7 @@ In VBA (PowerPoint > Developer > Visual Basic)
 - VBA does not automatically wrap your code. Add " _ " (space _ space) at the end of a line to continue code on the next line. Or write your code in a code editor like Atom (File > Settings > Packages > install language-vba for VBA syntax highlighting)
 - Comment your code! ' begins a comment.
 
+- Note: if you rename a macro, you'll need to relink the buttons that used to reference that macro to that macro.
 - In PowerPoint, you can find/edit names of objects in Home > Select > Selection Pane, and names of slides in View > Outline View.
 
 - Debug > Compile VBAProject is your friend. When you make changes, run this and make sure it doesn't freak as first pass for errors.
