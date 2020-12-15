@@ -1,9 +1,10 @@
-****ABOUT THIS CODE****
+# About this code
 The purpose of this code is to automatically code responses from running children live online using PowerPoint stimuli. This code was written for PowerPoint on Windows by Marianna Zhang in Dec 2020, but should work for PowerPoint on Mac with minor changes (filepath directory). I'm not sure if there's anything like this for Keynote.
 
-This code works by creates 2 arrays:
-1. array of COLUMNS, which is written to the 1st row of an Excel spreadsheet
-2. array of this participant's RESPONSES, which is written to the first empty row of the same Excel spreadsheet
+## How this code works
+This code works by creating 2 arrays:
+1. 1-dimensional array of COLUMNS, which is written to the 1st row of an Excel spreadsheet
+2. 1-dimensional array of this participant's RESPONSES, which is written to the first empty row of the same Excel spreadsheet
 
 This code contains a variety of macros (sub/subroutines) to collect responses:
 - measure_buttonName: the main workhorse, requires you to rename objects to the desired responses.
@@ -21,7 +22,7 @@ And there are 2 setup/save macros:
 - SaveToExcel: saves both arrays to the Excel datasheet. filepath will have minor differences on Windows vs Mac
 
 
-****GETTING STARTED****
+# Getting started
 In the same directory as your stimuli:
 1. Create an empty data.xlsx file.
 
@@ -32,17 +33,19 @@ In PowerPoint:
 * Note: if you rename a macro, you'll need to relink the buttons that used to reference that macro to that macro.
 
 In VBA (PowerPoint > Developer > Visual Basic)
-5. In the left-hand Project Manager sidebar, click Module 1 to bring up the main code, and customized the setup macro as desired.
-6. In the left-hand Project Manager sidebar, click UserForm to customize the userform associated with setup.
-7. If you are on a Mac, edit the filepath in SaveToExcel to Mac filepath syntax.
+5. In the left-hand Project Manager sidebar, click "Module 1" to bring up the main code, and customize the setup macro as desired.
+6. In the left-hand Project Manager sidebar, click "UserForm" to customize the userform associated with setup.
+7. If you are on a Mac, edit the filepath in the SaveToExcel macro to Mac filepath syntax.
 
-****RUNNING****
+# Running participants
 - Make sure Excel data sheet is closed so PowerPoint can edit it.
 - For macros that don't auto-advance, DO NOT click button twice. Afer clicking, advance slide manually by clicking elsewhere! Otherwise you'll get a double-recorded response that may bump subsequent responses out of range of the array.
 - If you use 2 monitors, pop-ups will appear on whichever window you click the button. So if you click on the non-shared screen, pop-up will appear on non-shared screen.
 - You may run multiple participants in the same PowerPoint session, since the code will autoreset RESPONSES when setting up.
 
-****EDITING THE VBA CODE****
+# Editing the VBA code
+- Open VBA: PowerPoint > Developer > Visual Basic
+
 - Remember to always declare your variables ("Dim", "Public", or "Private") before you initialize them.
 - VBA does not automatically wrap your code. Add " _ " (space _ space) at the end of a line to continue code on the next line. Or write your code in a code editor like Atom (File > Settings > Packages > install language-vba for VBA syntax highlighting)
 - Comment your code! ' begins a comment.
@@ -53,12 +56,12 @@ In VBA (PowerPoint > Developer > Visual Basic)
 - (Should be a better way lol but) For jank debugging, add MsgBox (X) at a key point of the code to check that X looks okay.
 - If the Excel file did not update, or if a button that should have done something didn't do something, check your code for errors.
 - If the Excel file is locked for editing when you open it, force quit Excel from Task Manager and check your code for errors.
-- If you're stuck, google "VBA" and whatever you're stuck on. StackExchange and ExcelVBA are your friends. Most info online is about Excel, but it will transfer with occasional minor tweaks (worksheet -> slide, etc)
+- If you're stuck, google "VBA" and whatever you're stuck on. [Microsoft Office VBA documentation](https://docs.microsoft.com/en-us/office/vba/api/overview/powerpoint), StackExchange, and ExcelVBA help forums are your friends. Most info online is about Excel, but it will transfer with occasional minor tweaks (worksheet -> slide, etc)
 
-****IMPROVEMENTS****
+# Future improvements
 Feel free to make edits and improvements to the code yourself!
 
 Improvements I'm thinking to do:
 - Move device to the end so responses can be easily pasted into appt tracking.
-- Writing column name (measure name) and response to Excel after every response, rather than saving at the end. This will help avoid accidental double responses/non-responses causing misalignment between the two arrays. Currently, array values are also lost when you prematurely exit slide show (eg during resource allocation measure), so writing as you go would address that.
-- Adding macros to track resource distributions. I have code that successfully counts distribution of target objects in left vs right, or top vs bottom of screen, but the rest of the code will need to be restructured to write to Excel after every response, since the arrays are lost when you exist slide show. Will also need to reset target objects after distribution response is recorded.
+- Closer correspondence between column names and responses, to avoid accidental double responses/non-responses causing misalignment between the two arrays. Can pull the name of each measure from the name of the slide the macro is on. Not sure whether the best way to address this is with a dynamic 2D array or writing to Excel as you go. Writing to Excel as you go would add significant runtime, but might be necessary to implement coding for a resource allocation measure.
+- Implement a resource allocation measure. Resource allocation involves exiting slide show to allow participants to move target objects around. I have code that successfully counts allocation of target objects in left vs right, or top vs bottom of screen, but unfortunately, prematurely exiting slide show before responses are written to Excel apparently causes all stored values to be lost. So resource allocation may require that we write to Excel as we go, or that we save to Excel right before resource allocation. Target objects will also need to be reset after the resource allocation response is recorded.
