@@ -9,19 +9,19 @@ This code works by creating a **scripting dictionary** called **`data`**, which 
 `Keys` (column/measure names) are taken from the slide names (i.e., the text in a textbox formatted as a Title textbox, which can be off-screen).
 
 `Values` (responses) are taken when buttons are clicked, using your choice of a variety of macros (i.e., sub/subroutines):
-- **`measure_buttonName`**: *the main workhorse*. Takes the name of the button clicked as the response. Requires you to name objects to the desired response outputs in Selection Pane.
+- **`measure_buttonName`**: **the main workhorse**. Takes the name of the button clicked as the response. Requires you to name objects to the desired response outputs in Selection Pane.
 - `measure_buttonText`: Takes the text within the button clicked as the response. More limited use cases than measure_buttonName, but works if you're too lazy to rename all your objects and your objects are textboxes containing response text anyway.
 - `measure_textEntry_popOut`: Takes the text provided in a pop-out text entry box as the response. Works for transcribing open-ended responses.
 - Feel free to make more macros/subs if you need to collect more kinds of responses!
 
 Each of the above macros has no auto-advance, _advance1, and _advance2 versions to auto-advance the slides:
-- No auto-advance: If you want to stay on the slide after the response (eg asking subsequent/follow-up questions). Note that this opens the possibility of multiple macro clicks on a single slide, in which case the last click will be kept as the response.
-- **`_advance1`**: *recommended*, to keep things moving and minimize confusion/the number of actions a typical researcher needs to do.
-- `_advance2`: jumping slides during 2-step contingent measures
+- No auto-advance: Stay on the slide after the response (eg asking subsequent/follow-up questions). Note that this opens the possibility of multiple macro clicks on a single slide, in which case the last click will be kept as the response.
+- **`_advance1`**: **recommended**. Advances 1 slide when clicked to keep things moving and minimize confusion/the number of actions a typical researcher needs to do.
+- `_advance2`: Advances 2 slides. Useful for jumping slides during 2-step contingent measures.
 
 And there are 3 other important macros:
 - `Setup`: customize this macro and its associated UserForm based on your study specifics and how you want your datasheet formatted.
-- `putDeviceHere_advance1`: reorders the dictionary by moving the responses to the "device" measure to this point in the dictionary.
+- `putDeviceHere_advance1`: reorders the dictionary by moving the responses to the "device" measure to this point in the dictionary + advances 1 slide.
 - `SaveToExcel`: saves both arrays to the Excel datasheet. filepath will have minor differences on Windows vs Mac
 
 
@@ -31,25 +31,25 @@ And there are 3 other important macros:
 2. Open PowerPoint. Add the Developer menu to your ribbon: Home > Options > Customize Ribbon > Scroll down and check "Developer". Under Developer menu, click "Macro Security" to make sure macros are enabled.
 3. If you are using the `measures_buttonName` series of macros, set object names in PowerPoint via Selection Pane: Home > Editing > Select > Selection Pane. Double click an object in the Selection Pane to edit its name.
 4. Link your objects to whatever macros you want to use. Insert > Action > Run a macro > select your macro. There's no easy to way to see at a glance if your macro is linked, besides trying to reinsert macro link, so be careful about this!
-5. Add/check titles on all slides where you're collecting responses. View > Outline View to check the titles of all your slides. If your slide lacks a title, double click it in Outline View to add a title (ok drag the resulting textbox somewhere off-screen, but the textbox must be present).
+5. Add/check titles on all slides where you're collecting responses. View > Outline View to check the titles of all your slides. If your slide lacks a title, double click it in Outline View to add a title (ok to drag the resulting Title textbox somewhere off-screen, but a Title textbox *must* be present).
 6. Now open VBA (Developer menu > Visual Basic).  Click Tools at the top > References > make sure Microsoft Scripting Runtime is checked. (Dictionaries are not native to VBA, so this makes sure VBA can reference its home environment, Microsoft Scripting Runtime.)
 7. Go over to the left-hand Project Explorer sidebar. (If you don't see it, Ctrl + R, or View > Project Explorer). Click "Module 1" to bring up the main code. Optional: customize any code as desired.
 8. In the left-hand Project Manager sidebar, click `UserForm` to customize the userform associated with setup. Note that you can edit the appearance of the form if you right click and View Object, and edit the code behind the form if you right-click and View Code.
 9. If you are on a Mac, edit the filepath in the `SaveToExcel` macro to Mac filepath syntax.
 
 # Running participants
-- Make sure `data`, the Excel data sheet, is closed so PowerPoint can edit it.
+- Make sure `data.xlsx`, the Excel data sheet, is closed so PowerPoint can edit it.
 - When using macros that don't auto-advance slides, note that clicking multiple macros on a single slide will record the last click as the response.
 - If you use 2 monitors, pop-ups will appear on whichever window you click the button. So if you click on the non-shared screen, pop-up will appear on non-shared screen.
-- You may run multiple participants in the same PowerPoint session, since the code will autoreset RESPONSES when setting up.
+- You may run multiple participants in the same PowerPoint session, since the code will autoreset the `data` dictionary when setting up.
 
 # Editing the VBA code
 Open VBA in PowerPoint by going to Developer > Visual Basic.
 
 Tips for editing:
-- Remember to always declare your variables ("Dim", "Public", or "Private") before you initialize them.
-- VBA does not automatically wrap your code. Add " _ " (space _ space) at the end of a line to continue code on the next line. Or write your code in a code editor like Atom (File > Settings > Packages > install language-vba for VBA syntax highlighting)
-- Comment your code! ' begins a comment.
+- Remember to always declare your variables ("`Dim`", "`Public`", or "`Private`") before you initialize them.
+- VBA does not automatically wrap your code. Add ` _ ` (space _ space) at the end of a line to continue code on the next line. Or write your code in a code editor like Atom (File > Settings > Packages > install `language-vba` for VBA syntax highlighting)
+- Comment your code! `'` begins a comment.
 - Note: if you rename a macro, you'll need to relink the buttons that used to reference that macro to that macro.
 - In PowerPoint, you can find/edit names of objects in Home > Select > Selection Pane, and names of slides in View > Outline View.
 
@@ -69,5 +69,6 @@ If you're stuck, here are some resources. Most info online is about Excel, but i
 
 # Future improvements
 Here are some improvements I'm thinking to do. Definitely feel free to make edits and improvements to the code yourself too!
+- Lookup keys in Excel and writing values under them, instead of writing the entire row of values in the order they were stored. Particularly useful if order of measures changes across participants.
 - Implement a resource allocation measure. Resource allocation involves exiting slide show to allow participants to move target objects around. I have code that successfully counts allocation of target objects in left vs right, or top vs bottom of screen, but unfortunately, prematurely exiting slide show before responses are written to Excel apparently causes all stored values to be lost. So resource allocation may require that we write to Excel as we go, or that we save to Excel right before resource allocation. Target objects will also need to be reset after the resource allocation response is recorded.
 - Automatically generate `participantOfDay` by referencing previous files in `data` to fully automatically generate the value of `file`.
