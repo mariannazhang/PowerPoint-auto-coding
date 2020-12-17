@@ -1,6 +1,8 @@
 # About this code
 The purpose of this code is to automatically code responses from running children live using PowerPoint stimuli. This code was written for PowerPoint on Windows in Dec 2020, but should work for PowerPoint on Mac with minor changes (filepath directory). I'm not sure if there's anything like this for Keynote.
 
+The template slides (`stimuli.pptm`) are adapted from the [online testing slides from Stanford Social Learning Lab](http://github.com/sociallearninglab/online_testing_materials) for use by researchers sharing their screens on Zoom.
+
 ## How this code works
 This code works by creating a **scripting dictionary** called **`data`**, which contains *pairs* of keys and values:
 1. **`keys`**: column/measure names (e.g. "condition", "measure1", "measure2")
@@ -43,17 +45,25 @@ _Linking a macro._ Here the object is linked to the `measure_buttonName_advance1
 
 7. Now open VBA: Developer menu > Visual Basic.  Click Tools at the top > References > make sure "Microsoft Scripting Runtime" is checked. (Dictionaries are not native to VBA, so this makes sure VBA can reference its home environment, Microsoft Scripting Runtime.)
 8. Go over to the left-hand Project Explorer sidebar. (If you don't see it, Ctrl + R, or View > Project Explorer). Click `Module 1` to bring up the main code. Optional: customize any code as desired. If you are on a Mac, edit the filepath in the `SaveToExcel` macro to Mac filepath syntax.
-9. In the left-hand Project Manager sidebar, click `UserForm` to customize the userform associated with setup. Right-click `UserForm` > View Object to [edit the fields and aesthetics of the form](https://docs.microsoft.com/en-us/office/vba/powerpoint/how-to/create-custom-dialog-boxes) (View > Toolbox to insert new fields: `TextBox` accepts any value, `ListBox` requires selecting from pre-specified values, `ComboBox` suggests pre-specified values but accepts other values too). Right-click `UserForm` > View Code to edit the code behind the form, including how the values from the form are being saved to the `data` dictionary.
 
 ![View in VBA with SaveToExcel macro selected](/readme_images/VBA.png)
-_A typical view in VBA._ Here we are looking at the `SaveToExcel` macro. Note that the Project Manager sidebar is at the top left.
+_A typical view in VBA._ Here we are in the code for `Module 1`, specifically the `SaveToExcel` macro. Note that the Project Manager sidebar is at the top left.
+
+9. In the left-hand Project Manager sidebar, click `UserForm` to customize the userform associated with setup. Right-click `UserForm` > View Object to [edit the fields and aesthetics of the form](https://docs.microsoft.com/en-us/office/vba/powerpoint/how-to/create-custom-dialog-boxes) (View > Toolbox to insert new fields: `TextBox` accepts any value, `ListBox` requires selecting from pre-specified values, `ComboBox` suggests pre-specified values but accepts other values too). Right-click `UserForm` > View Code to edit the code behind the form, including how the values from the form are being saved to the `data` dictionary.
+
+![View in VBA looking at the object for UserForm](/readme_images/VBA_UserForm_object.png)
+_Viewing the UserForm object._ Here we are looking at the `UserForm` object, and can move around the fields, change how the fields look, and change how the form generally looks. At right we have the Toolbox, with which we can add new fields (View > Toolbox if you can't see the Toolbox menu). At bottom left we have the Properties menu, where we can see that `condition` is a `ListBox` object (`ListBox` only accepts specified values).
+
+![View in VBA looking at the code for UserForm](/readme_images/VBA_UserForm_code.png)
+_Viewing the UserForm code._ Here we are looking at the `UserForm` code, specifically how the UserForm is initialized. Note that `condition` is initialized with specified values for `condition`: "condition1", "condition2", and "condition3". 
 
 # Running participants
 - **Make sure `data.xlsx`, the Excel data sheet, is closed** so PowerPoint can edit it.
 - If you'd like to fill out the setup form without the participant seeing it (e.g. so participant/guardian are blind to condition), you have a few options:
   - Share screen to share your slideshow. Click "pause share" to freeze the screen share, click "Setup" to fill out the form, and then click "resume share" once you're done with the form. The participant will see a frozen screen while you're filling it out.
-  - Launch the slideshow and fill out the "Setup" form on your own *before* you share your screen. Note that exiting slideshow prematurely will erase saved data, so instead of exiting slideshow, you should tab out of slideshow (`Alt + Tab` on Windows or `Cmd + Tab` on Mac to switch between open windows, or try swiping left or right on your mousepad). Tab over to Zoom, share screen to share your slideshow, and you should return to slideshow.
-  - If you use 2 monitors and see your slideshow on both (e.g. sharing slides, not sharing presenter view), pop-ups will appear on whichever window you click the button. So if you click pop-up buttons like "Setup" on the non-shared screen, pop-up will appear on non-shared screen. 
+  - Launch the slideshow and fill out the "Setup" form on your own *before* you share your screen. Note that exiting slideshow prematurely will erase saved data, so instead of exiting slideshow, you should tab out of slideshow (`Alt + Tab` on Windows or `Cmd + Tab` on Mac to switch between open windows, or try swiping left or right on your mousepad with 3 fingers). Tab over to Zoom, share screen to share your slideshow, and you should return to slideshow.
+  - Edit the `condition` options in `UserForm` to be something non-transparent to the participant, and then have `UserForm` reassign the actual name of the condition when saving the value of `condition` to `data`.
+  - If you use 2 monitors and see your slideshow on both (e.g. sharing slides, not sharing presenter view), pop-ups will appear on whichever window you click the button. So if you click pop-up buttons like "Setup" on the non-shared screen, pop-up will appear on non-shared screen.
 - You can run your slides and click macros in any order or number of times. Note that clicking macros(s) on the same slide (or different slides with the same Title) multiple times will overwrite the same value in `data`, since they share the same `key` (slide title). The *last* pressed macro will store the final response.
 - **`data` will be lost if you exit slideshow before running `SaveToExcel`**. You can jump between slides without exiting slideshow by right-clicking anywhere on the slide in slideshow > See all slides > select a slide. Be prepared to reference your recording as a backup in case of premature exit.
 - You may run multiple participants in the same PowerPoint session, since the code will autoreset the `data` dictionary when setting up, and `data` is also cleared when you exit slideshow.
