@@ -3,8 +3,8 @@ The purpose of this code is to automatically code responses from running childre
 
 ## How this code works
 This code works by creating a **scripting dictionary** called **`data`**, which contains pairs of keys and values in the order they are stored:
-1. **`keys`**: column/measure names
-2. **`values`**: this participant's response
+1. **`keys`**: column/measure names (e.g. "condition", "measure1", "measure2")
+2. **`values`**: this participant's response (e.g. "structural", "yes", "blue")
 
 `Keys` (column/measure names) are taken from the slide names (i.e. the text in a textbox formatted as a Title textbox, which can be off-screen).
 
@@ -25,16 +25,27 @@ And there are 2 other important macros:
 
 
 # Getting started
-0. Download the files here to the same folder.
-1. Incorporate your stimuli into stimuli.pptm (.pptm means it's macro-enabled). Clear the contents of `data.xlsx`.
+0. Clone/fork this repo, or download the files here as a .zip and unzip them into a folder.
+1. Incorporate your stimuli into `stimuli.pptm` (`.pptm` means it's macro-enabled). Clear the contents of `data.xlsx`.
 2. Open PowerPoint. Add the Developer menu to your ribbon: Home > Options > Customize Ribbon > scroll down the right-hand column and check "Developer". Go to the new Developer menu > click "Macro Security" to make sure macros are enabled (they are usually disabled by default for security reasons).
-3. If you are using the `measures_buttonName` series of macros, set object names in PowerPoint via Selection Pane: Home > Editing > Select > Selection Pane. Double click an object in the Selection Pane to edit its name.
-4. Link your objects to whatever macros you want to use. Insert > Action > Run a macro > select your macro. There's no easy to way to see at a glance if your macro is linked, besides trying to reinsert macro link, so make sure everything that you want linked is linked! If you are not auto-advancing slides, I recommend you check "Play sound" as well, so the button makes a sound when clicked (to minimize confusion about whether it was clicked already or not).
-5. Make sure each slide where you're collecting responses has a *unique title*, which will be the name of its column in `data.xlsx`. View > Outline View to check the titles of all your slides. If your slide lacks a title, double click it in Outline View to add a title (ok to drag the resulting Title textbox off-screen, but a Title textbox *must* be present in Selection Pane). If you have a pre-existing header row in `data.xlsx`, be sure that your slide titles match the *exact* text in the header row (so `SaveToExcel` can properly assign the corresponding values).
+3. Make sure each slide where you're collecting responses has a *unique title*, which will be the name of its column in `data.xlsx`. View > Outline View to check the titles of all your slides. If your slide lacks a title, double click it in Outline View to add a title (ok to drag the resulting Title textbox off-screen, but a Title textbox *must* be present in Selection Pane). If you have a pre-existing header row in `data.xlsx`, be sure that your slide titles match the *exact* text in the header row (so `SaveToExcel` can properly assign the corresponding values).
+
+![PowerPoint slide with pictures of blue berries and pink berries, and textbox reading "measure3" just off screen. Outline view is open on the left, showing slide named measure 2. Selection pane is open on the right, showing shapes named blueberries, pinkberries, Title 3, and Title 3.](/readme_images/slide.png)
+_A typical slide._ It has a Title, here just off-screen (`measure2`), that gives the slide its title in Outline View. Each response button (here, two pictures) is named in Selection Pane as whatever the response text should be (here, "blueberries", "pinkberries").
+
+4. If you are using the `measure_buttonName` series of macros, set object names in PowerPoint via Selection Pane: Home > Editing > Select > Selection Pane. Double click an object in the Selection Pane to edit its name.
+5. Link your objects to whatever macros you want to use. Insert > Action > Run a macro > select your macro. There's no easy to way to see at a glance if your macro is linked, besides trying to reinsert macro link, so make sure everything that you want linked is linked! If you are not auto-advancing slides, I recommend you check "Play sound" as well, so the button makes a sound when clicked (to minimize confusion about whether it was clicked already or not).
+
+![PowerPoint menu showing options for action button, including Run macro and Play sound](/readme_images/linkToMacro.png)
+_Linking a macro._ Here the object is linked to the `measure_buttonName_advance1` macro. Note the "Play sound" option if you'd like to play a sound, in addition to running the macro, when the object is clicked.
+
 6. Now open VBA (Developer menu > Visual Basic).  Click Tools at the top > References > make sure "Microsoft Scripting Runtime" is checked. (Dictionaries are not native to VBA, so this makes sure VBA can reference its home environment, Microsoft Scripting Runtime.)
 7. Go over to the left-hand Project Explorer sidebar. (If you don't see it, Ctrl + R, or View > Project Explorer). Click `Module 1` to bring up the main code. Optional: customize any code as desired.
 8. In the left-hand Project Manager sidebar, click `UserForm` to customize the userform associated with setup. Right-click `UserForm` > View Code to edit the code behind the form, including how the first few setup entries of the `data` dictionary are being assigned. Right click `UserForm` > View Object to edit the aesthetics of the form and add any new form boxes.
 9. If you are on a Mac, edit the filepath in the `SaveToExcel` macro to Mac filepath syntax.
+
+![View in VBA with SaveToExcel macro selected](/readme_images/VBA.png)
+_A typical view in VBA._ Here we are looking at the `SaveToExcel` macro. Note that the Project Manager sidebar is at the top left.
 
 # Running participants
 - **Make sure `data.xlsx`, the Excel data sheet, is closed** so PowerPoint can edit it.
