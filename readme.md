@@ -14,22 +14,38 @@ This code works by creating a **scripting dictionary** called **`data`**, which 
 - **`measure_buttonName`**: **the main workhorse**. Takes the name of the button clicked as the response. Requires you to name objects to the desired response outputs in Selection Pane.
 - `measure_buttonText`: Takes the text within the button clicked as the response. More limited use cases than measure_buttonName, but works if you're too lazy to rename all your objects and your objects are textboxes containing response text anyway.
 - `measure_textEntry_popOut`: Takes the text provided in a pop-out text entry box as the response. Works for transcribing open-ended responses.
+- `measure_allocationLR`: Calculates the number of target objects distributed to the left vs right of the screen, returns as left_right. Designed for resource allocation measures where you exit slideshow, move objects around, and then resume slideshow.
+- `measure_allocationTopBottom`: Calculates the number of target objects (objects whose name starts with `target`) distributed to the top vs bottom of the screen, returns as top_bottom. Designed for resource allocation measures where you exit slideshow, move objects around, and then resume slideshow.
 - Feel free to make more macros/subs if you need to collect more kinds of responses!
 
-Each of the above macros has no auto-advance, `_advance1`, and `_advance2` versions to auto-advance the slides:
+Each of the above macros has different versions depending on how you want to advance slides:
 - No auto-advance: Stay on the slide after the response (e.g., to ask subsequent/follow-up questions). Note that this opens the possibility of multiple macro clicks on a single slide, in which case the last click will be kept as the response. If you're not auto-advancing, highly recommend adding sounds when button is clicked to minimize confusion about whether the button was clicked or not.
 - **`_advance1`**: **recommended**. Advances 1 slide when clicked to keep things moving and minimize confusion/the number of actions a typical researcher needs to do.
 - `_advance2`: Advances 2 slides. Useful for jumping slides during 2-step contingent measures.
 
-And there are 2 other important macros:
-- `Setup`: customize this macro and its associated UserForm based on your study specifics and what setup info you want researchers to input.
-- `SaveToExcel`: saves the scripting dictionary `data` to the Excel datasheet `data.xlsx` by: assigning the keys in `data` as the header row (if header row is empty), picking out the first empty row, looking for each `key` in the header row, and assigning the key's corresponding value in that empty row in the same column as the `key`. The filepath to reference `data.xlsx` will have minor differences on Windows vs Mac.
+2 important macros everyone will need to use:
+- `Setup`: Initializes `data`, sets the session as "in progress", and collects some setup info. Customize this macro's associated UserForm based on your study specifics and what setup info you want researchers to input.
+- `SaveToExcel_end`: Saves the scripting dictionary `data` to the Excel datasheet `data.xlsx` by:
+  - If header row is empty, assigns the `key`s in the order they were collected.
+  - Pick out a target row. Look for a row "in progress" to continue writing to; otherwise, scan down the first column and pick out the first empty row.
+  - Sets participant number based on target row, sets "in progress" to "no".
+  - Look for each `key` in the header row. Assign the key's corresponding `value` to the cell in the target row in the same column as the `key`.
+  - Note: if you are on a Mac, change the filepath used to reference `data.xlsx`.
 
+A few helper macros if you anticipate exiting and resuming slideshow in the middle of your session (speccifically designed for resource allocation using `measure_allocation`):
+- `inProgress_SaveToExcel`: Exactly the same as `SaveToExcel_end`, except it keeps "in progress" as "yes", so subsequent macros that write to Excel know to continue writing on the same row. Should be used immediately before exiting an in-progress slideshow. Can be used multiple times throughout a study.
+- `inProgress_resume`: Exactly the same as `Setup`, except it doesn't run the setup form. Basically it just re-initializes the `data` dictionary. Should be used immediately after resuming an in-progress slideshow. Can be used multiple times throughout a study.
+
+A few helper macros to reset resource allocation (`measure_allocation`) slides:
+- `reset_allocation_LR`: Resets target objects on a *manually specified* slide to be evenly distributed along the vertical midline (minus some headroom for your video thumbnail).
+  - Note: change the midline calculation if your Zoom video thumbnail will not be top center.
+- `reset_allocation_TopBottom`: Resets target objects on a *manually specified* slide to be evenly distributed along the horizontal midline.
 
 # Getting started
 0. Clone/fork this repo, or download the files here as a .zip and unzip them into a folder.
-1. Clear the contents of `data.xlsx`. Add your desired column names to the header row; make sure to use the *exact* same text as your slide titles, so `SaveToExcel` can appropriately assign participants' responses. If you choose not to specify a header row, `SaveToExcel` will automatically fill in a header row using the `keys` in the order they were collected.
+1. Clear the contents of `data.xlsx`. Add your desired column names to the header row; make sure to use the *exact* same text as your slide titles, so `SaveToExcel` can appropriately assign participants' responses. You can add more columns than exist in your slides (e.g. "parental_interference", "exp_error", "comments"); such columns will be left blank (e.g. for manual entry after running). If you choose not to specify a header row, `SaveToExcel` will automatically fill in a header row using the `keys` *in the order they were collected*.
 2. Open `stimuli.pptm` (`.pptm` means it's macro-enabled) in PowerPoint. Adapt the template slides to be your stimuli slides.
+  - Note: if you are using resource allocation measures, make sure your resource allocation slide contains `inProgress_SaveToExcel` (save before exiting slideshow) *and* `inProgress_resume` buttons, in addition to whichever `measure_allocation` you are using. You should also include the corresponding `reset_allocation` somewhere at the end so you can reset the slides for the next participant, and can also include it on the same allocation slide if participant wants to redo the allocation. I recommend hiding all these buttons under wherever your video thumbnail will be to reduce visual clutter for the participant.
 3. Add the Developer menu to your PowerPoint ribbon: Home > Options > Customize Ribbon > scroll down the right-hand column and check "Developer". Go to the new Developer menu > click "Macro Security" to make sure macros are enabled (they are usually disabled by default for security reasons).
 4. Add *titles* to each slide where you're collecting responses, which will be/should match the name of its column in `data.xlsx`. View > Outline View to check the titles of all your slides. If your slide lacks a title, double-click it in Outline View to add a title (ok to drag the resulting Title textbox off-screen, but a Title textbox *must* be present in Selection Pane). If you have a pre-existing header row in `data.xlsx`, be sure that your slide titles match the *exact* text in the header row, so `SaveToExcel` can appropriately assign participants' responses. Note: two slides can have the same title, but note that clicking macros on either slide will write to the same column, so only do this if you're okay overwriting responses or if participants will only responding on one of the slides (eg the 2nd step of a 2 step measure).
 5. If you are using the `measure_buttonName` series of macros (as recommended), set object names in PowerPoint via Selection Pane: Home > Editing > Select > Selection Pane. Double click an object in the Selection Pane to edit its name.
@@ -45,19 +61,20 @@ _Linking a macro._ Here the object is linked to the `measure_buttonName_advance1
 
 7. Now open VBA: Developer menu > Visual Basic.  Click Tools at the top > References > make sure "Microsoft Scripting Runtime" is checked. (Dictionaries are not native to VBA, so this makes sure VBA can reference its home environment, Microsoft Scripting Runtime.)
 8. Go over to the left-hand Project Explorer sidebar. (If you don't see it, Ctrl + R, or View > Project Explorer). Click `Module 1` to bring up the main code. Optional: customize any code as desired. If you are on a Mac, edit the filepath in the `SaveToExcel` macro to Mac filepath syntax.
+  - Note: if you are using `reset_allocation`, make sure to manually specify which slide to reset, since that is currently hard coded.
 
-![View in VBA with SaveToExcel macro selected](/readme_images/VBA.png)
+![View in VBA looking at Module 1, with SaveToExcel macro selected](/readme_images/VBA.png)
 _A typical view in VBA._ Here we are in the code for `Module 1`, specifically the `SaveToExcel` macro. Note that the Project Manager sidebar is at the top left.
 
 9. In the left-hand Project Manager sidebar, click `UserForm` to customize the userform associated with setup. Right-click `UserForm` > View Object to [edit the fields and aesthetics of the form](https://docs.microsoft.com/en-us/office/vba/powerpoint/how-to/create-custom-dialog-boxes) (View > Toolbox to insert new fields: `TextBox` accepts any value, `ListBox` requires selecting from pre-specified values, `ComboBox` suggests pre-specified values but accepts other values too). Right-click `UserForm` > View Code to edit the code behind the form, including how the values from the form are being saved to the `data` dictionary.
 
-![View in VBA looking at the object for UserForm](/readme_images/VBA_UserForm_object.png)
+![View in VBA looking at the UserForm object](/readme_images/VBA_UserForm_object.png)
 _Viewing the UserForm object._ Here we are looking at the `UserForm` object, and can move around the fields, change how the fields look, and change how the form generally looks. At right we have the Toolbox, with which we can add new fields (View > Toolbox if you can't see the Toolbox menu). At bottom left we have the Properties menu, where we can see that `condition` is a `ListBox` object (`ListBox` only accepts specified values).
 
-![View in VBA looking at the code for UserForm](/readme_images/VBA_UserForm_code.png)
-_Viewing the UserForm code._ Here we are looking at the `UserForm` code, specifically how the UserForm is initialized. Note that `condition` is initialized with specified values for `condition`: "condition1", "condition2", and "condition3". 
+![View in VBA looking at the UserForm code](/readme_images/VBA_UserForm_code.png)
+_Viewing the UserForm code._ Here we are looking at the `UserForm` code, specifically how the UserForm is initialized. Note that `condition` is initialized with specified values for `condition`: "condition1", "condition2", and "condition3".
 
-# Running participants
+# Running participants live
 - **Make sure `data.xlsx`, the Excel data sheet, is closed** so PowerPoint can edit it.
 - If you'd like to fill out the setup form without the participant seeing it (e.g. so participant/guardian are blind to condition), you have a few options:
   - Share screen to share your slideshow. Click "pause share" to freeze the screen share, click "Setup" to fill out the form, and then click "resume share" once you're done with the form. The participant will see a frozen screen while you're filling it out.
@@ -99,5 +116,5 @@ If you're stuck, here are some resources. Most info online is about Excel, but i
 
 # Future improvements
 Here are some improvements I'm thinking to do. Definitely feel free to make edits and improvements to the code yourself too!
-- Implement a resource allocation measure. Resource allocation involves exiting slide show to allow participants to move target objects around. I have code that successfully counts allocation of target objects in left vs right, or top vs bottom of screen, but unfortunately, prematurely exiting slide show before responses are written to Excel apparently causes all stored values to be lost. So resource allocation may require that we write to Excel as we go, or that we save to Excel right before resource allocation. Target objects will also need to be reset after the resource allocation response is recorded.
+- Automatically detect which slides are resource allocation slides in `reset_allocation`.
 - Automatically generate `participantOfDay` by referencing previous files in `data` to fully automatically generate the value of `file`.
