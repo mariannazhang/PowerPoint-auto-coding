@@ -19,10 +19,9 @@ Each of the above macros has no auto-advance, `_advance1`, and `_advance2` versi
 - **`_advance1`**: **recommended**. Advances 1 slide when clicked to keep things moving and minimize confusion/the number of actions a typical researcher needs to do.
 - `_advance2`: Advances 2 slides. Useful for jumping slides during 2-step contingent measures.
 
-And there are 3 other important macros:
-- `Setup`: customize this macro and its associated UserForm based on your study specifics and how you want your datasheet formatted.
-- `putDeviceHere_advance1`: reorders the dictionary by moving the responses to the "device" measure to this point in the dictionary + advances 1 slide.
-- `SaveToExcel`: saves the scripting dictionary `data` to the Excel datasheet `data.xlsx` by: assigning the keys in `data` as the header row (if header row is empty), picking out the first empty row, looking for each key in the header row, and assigning the key's corresponding value in that row and column. The filepath to reference `data.xlsx` will have minor differences on Windows vs Mac.
+And there are 2 other important macros:
+- `Setup`: customize this macro and its associated UserForm based on your study specifics and what setup info you want researchers to input.
+- `SaveToExcel`: saves the scripting dictionary `data` to the Excel datasheet `data.xlsx` by: assigning the keys in `data` as the header row (if header row is empty), picking out the first empty row, looking for each `key` in the header row, and assigning the key's corresponding value in that empty row in the same column as the `key`. The filepath to reference `data.xlsx` will have minor differences on Windows vs Mac.
 
 
 # Getting started
