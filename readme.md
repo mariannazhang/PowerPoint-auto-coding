@@ -8,16 +8,30 @@ This code works by creating a [**scripting dictionary**](https://docs.microsoft.
 1. **`keys`**: column/measure names (e.g. "condition", "measure1", "measure2")
 2. **`values`**: this participant's response (e.g. "structural", "yes", "blue")
 
-`Keys` (column/measure names) are generally taken from the *slide titles*, as seen in View > Outline View.
+`Keys` (column/measure names) are generally taken from the *slide titles* (as seen in View > Outline View).
 
 `Values` (responses) are taken when buttons are clicked, using your choice of a variety of macros (i.e., sub/subroutines):
-- **`measure_buttonName`**: **the main workhorse**. Takes the name of the button clicked as the response. Requires you to name objects to the desired response outputs in Selection Pane.
+- **`measure_buttonName`**: **the main workhorse**. Takes the name of the button (as seen in Home > Select > Selection Pane) as the response.
 - `measure_buttonText`: Takes the text within the button clicked as the response. More limited use cases than measure_buttonName, but works if you're too lazy to rename all your objects and your objects are textboxes containing response text anyway.
 - `measure_buttonNameAsKey`: Unlike the other macros, this macro takes the name of the button clicked as the `key`. It records "pressed" as the response. Used in situations where you have a variety of objects on a slide and you want to record which/how many are clicked.
 - `measure_textEntry_popOut`: Takes the text provided in a pop-out text entry box as the response. Works for transcribing open-ended responses.
 - `measure_allocationLR`: Calculates the number of target objects distributed to the left vs right of the screen, returns as left_right. Designed for resource allocation measures where you exit slideshow, move objects around, and then resume slideshow.
 - `measure_allocationTopBottom`: Calculates the number of target objects (objects whose name starts with `target`) distributed to the top vs bottom of the screen, returns as top_bottom. Designed for resource allocation measures where you exit slideshow, move objects around, and then resume slideshow.
 - Feel free to make more macros/subs if you need to collect more kinds of responses!
+
+Here is a summary table of all the currently available macros to record responses:
+
+| Macro                         | `Key` (column name) | `Value` (response)  |
+| ----------------------------- |---------------------| --------------------|
+| **`measure_buttonName`**      | slide title         | button name         |
+| `measure_buttonText`          | slide title         | button text         |
+| `measure_buttonNameAsKey`     | button name         | "pressed"           |
+| `measure_textEntry_popOut`    | slide title         | pop-out text entry  |
+| `measure_allocationLR`        | slide title         | left_right distribution of target objects |
+| `measure_allocationTopBottom` | slide title         | top_bottom distribution of target objects |
+
+Slide titles can be seen/edited in View > Outline View, or by directly editing the title textbox.
+Button names can be edited in Home > Select > Selection Pane.
 
 Most of the above macros have different versions depending on how you want to advance slides:
 - No auto-advance: Stay on the slide after the response (e.g., to ask subsequent/follow-up questions). Note that this opens the possibility of multiple macro clicks to the same key, in which case the last click will be kept as the response. If you're not auto-advancing, highly recommend adding sounds when button is clicked to minimize confusion about whether the button was clicked or not.
