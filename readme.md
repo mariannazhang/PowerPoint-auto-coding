@@ -1,25 +1,26 @@
 # About this code
-The purpose of this code is to automatically code responses from running children live using PowerPoint stimuli. This code was written for PowerPoint on Windows in Dec 2020, but should work for PowerPoint on Mac with minor changes (filepath directory). I'm not sure if there's anything like this for Keynote.
+The purpose of this code is to automatically code responses from running children live using PowerPoint stimuli. This code was written in Visual Basic ("VBA") for PowerPoint on Windows in Dec 2020, but should work for PowerPoint on Mac with minor changes (filepath directory). I'm not sure if there's anything like this for Keynote.
 
-The template slides (`stimuli.pptm`) are adapted from the [online testing slides from Stanford Social Learning Lab](http://github.com/sociallearninglab/online_testing_materials) for use by researchers sharing their screens on Zoom.
+The template slides (`stimuli.pptm`) are adapted from the [online testing slides from Stanford Social Learning Lab](http://github.com/sociallearninglab/online_testing_materials), and are designed for use by researchers who run live testing sessions by sharing screen to share a PowerPoint slideshow on Zoom.
 
 ## How this code works
-This code works by creating a **scripting dictionary** called **`data`**, which contains *pairs* of keys and values:
+This code works by creating a [**scripting dictionary**](https://docs.microsoft.com/en-us/office/vba/language/reference/user-interface-help/dictionary-object) called **`data`**, which contains *pairs* of keys and values:
 1. **`keys`**: column/measure names (e.g. "condition", "measure1", "measure2")
 2. **`values`**: this participant's response (e.g. "structural", "yes", "blue")
 
-`Keys` (column/measure names) are taken from the slide names (i.e. the text in a textbox formatted as a Title textbox, which can be off-screen).
+`Keys` (column/measure names) are generally taken from the *slide titles*, as seen in View > Outline View.
 
 `Values` (responses) are taken when buttons are clicked, using your choice of a variety of macros (i.e., sub/subroutines):
 - **`measure_buttonName`**: **the main workhorse**. Takes the name of the button clicked as the response. Requires you to name objects to the desired response outputs in Selection Pane.
 - `measure_buttonText`: Takes the text within the button clicked as the response. More limited use cases than measure_buttonName, but works if you're too lazy to rename all your objects and your objects are textboxes containing response text anyway.
+- `measure_buttonNameAsKey`: Unlike the other macros, this macro takes the name of the button clicked as the `key`. It records "pressed" as the response. Used in situations where you have a variety of objects on a slide and you want to record which/how many are clicked.
 - `measure_textEntry_popOut`: Takes the text provided in a pop-out text entry box as the response. Works for transcribing open-ended responses.
 - `measure_allocationLR`: Calculates the number of target objects distributed to the left vs right of the screen, returns as left_right. Designed for resource allocation measures where you exit slideshow, move objects around, and then resume slideshow.
 - `measure_allocationTopBottom`: Calculates the number of target objects (objects whose name starts with `target`) distributed to the top vs bottom of the screen, returns as top_bottom. Designed for resource allocation measures where you exit slideshow, move objects around, and then resume slideshow.
 - Feel free to make more macros/subs if you need to collect more kinds of responses!
 
-Each of the above macros has different versions depending on how you want to advance slides:
-- No auto-advance: Stay on the slide after the response (e.g., to ask subsequent/follow-up questions). Note that this opens the possibility of multiple macro clicks on a single slide, in which case the last click will be kept as the response. If you're not auto-advancing, highly recommend adding sounds when button is clicked to minimize confusion about whether the button was clicked or not.
+Most of the above macros have different versions depending on how you want to advance slides:
+- No auto-advance: Stay on the slide after the response (e.g., to ask subsequent/follow-up questions). Note that this opens the possibility of multiple macro clicks to the same key, in which case the last click will be kept as the response. If you're not auto-advancing, highly recommend adding sounds when button is clicked to minimize confusion about whether the button was clicked or not.
 - **`_advance1`**: **recommended**. Advances 1 slide when clicked to keep things moving and minimize confusion/the number of actions a typical researcher needs to do.
 - `_advance2`: Advances 2 slides. Useful for jumping slides during 2-step contingent measures.
 
@@ -43,14 +44,16 @@ A few helper macros to reset resource allocation (`measure_allocation`) slides:
 
 # Getting started
 0. Clone/fork this repo, or download the files here as a .zip and unzip them into a folder.
-1. Clear the contents of `data.xlsx`. Add your desired column names to the header row; make sure to use the *exact* same text as your slide titles, so `SaveToExcel` can appropriately assign participants' responses. You can add more columns than exist in your slides (e.g. "parental_interference", "exp_error", "comments"); such columns will be left blank (e.g. for manual entry after running). If you choose not to specify a header row, `SaveToExcel` will automatically fill in a header row using the `keys` *in the order they were collected*.
+1. Clear the contents of `data.xlsx`. Add your desired column names to the header row. Make sure to include a column named "in_progress", and use the *exact* same text as your keys (generally slide titles), so `SaveToExcel` can appropriately assign participants' responses.
+  - You can add more columns than macros assign in your slides (e.g. "parental_interference", "exp_error", "comments"). Such columns will be left blank (e.g. for manual entry after running).
+  - If you choose not to specify a header row, `SaveToExcel` will automatically fill in a header row using the `keys` *in the order they were collected*.
 2. Open `stimuli.pptm` (`.pptm` means it's macro-enabled) in PowerPoint. Adapt the template slides to be your stimuli slides.
-  - Note: if you are using resource allocation measures, make sure your resource allocation slide contains `inProgress_SaveToExcel` (save before exiting slideshow) *and* `inProgress_resume` buttons, in addition to whichever `measure_allocation` you are using. You should also include the corresponding `reset_allocation` somewhere at the end so you can reset the slides for the next participant, and can also include it on the same allocation slide if participant wants to redo the allocation. I recommend hiding all these buttons under wherever your video thumbnail will be to reduce visual clutter for the participant.
+  - Note: if you are using resource allocation measures where you exit and resume slideshow, make sure your resource allocation slide contains `inProgress_SaveToExcel` (save before exiting slideshow) *and* `inProgress_resume` buttons, in addition to whichever `measure_allocation` you are using. You should also include the corresponding `reset_allocation` somewhere at the end so you can reset the slides for the next participant, and can also include it on the same allocation slide if participant wants to redo the allocation. I recommend hiding all these buttons under wherever your video thumbnail will be to reduce visual clutter for the participant.
 3. Add the Developer menu to your PowerPoint ribbon: Home > Options > Customize Ribbon > scroll down the right-hand column and check "Developer". Go to the new Developer menu > click "Macro Security" to make sure macros are enabled (they are usually disabled by default for security reasons).
-4. Add *titles* to each slide where you're collecting responses, which will be/should match the name of its column in `data.xlsx`. View > Outline View to check the titles of all your slides. If your slide lacks a title, double-click it in Outline View to add a title (ok to drag the resulting Title textbox off-screen, but a Title textbox *must* be present in Selection Pane). If you have a pre-existing header row in `data.xlsx`, be sure that your slide titles match the *exact* text in the header row, so `SaveToExcel` can appropriately assign participants' responses. Note: two slides can have the same title, but note that clicking macros on either slide will write to the same column, so only do this if you're okay overwriting responses or if participants will only responding on one of the slides (eg the 2nd step of a 2 step measure).
-5. If you are using the `measure_buttonName` series of macros (as recommended), set object names in PowerPoint via Selection Pane: Home > Editing > Select > Selection Pane. Double click an object in the Selection Pane to edit its name.
+4. Add *titles* to each slide where you're collecting responses, which will generally serve as the name of its column in `data.xlsx`. View > Outline View to check the titles of all your slides. If your slide lacks a title, double-click it in Outline View to add a title (ok to drag the resulting Title textbox off-screen, but a Title textbox *must* be present in Selection Pane). If you have a pre-existing header row in `data.xlsx`, be sure that your slide titles match the *exact* text in the header row, so `SaveToExcel` can appropriately assign participants' responses. Note: two slides can have the same title, but note that clicking macros on either slide will write to the same column, so only do this if you're okay overwriting responses or if participants will only responding on one of the slides (eg the 2nd step of a 2 step measure).
+5. If you are using the `measure_buttonName` series of macros, set object names in PowerPoint via Selection Pane: Home > Editing > Select > Selection Pane. Double click an object in the Selection Pane to edit its name.
 
-![PowerPoint slide with pictures of blue berries and pink berries, and textbox reading "measure3" just off screen. Outline view is open on the left, showing slide named measure 2. Selection pane is open on the right, showing shapes named blueberries, pinkberries, Title 3, and Title 3.](/readme_images/slide.png)
+![PowerPoint slide with pictures of blue berries and pink berries, and textbox reading "measure3" just off screen. Outline view is open on the left, showing slide titled measure 2. Selection pane is open on the right, showing shapes named blueberries, pinkberries, Title 3, and Title 3.](/readme_images/slide.png)
 _A typical slide._ It has a Title, here just off-screen (`measure2`), that gives the slide its title in Outline View. Each response button (here, two pictures) is named in Selection Pane as whatever the response text should be (here, "blueberries", "pinkberries").
 
 6. Link your objects to whatever macros you want to run when they are clicked. Insert > Action > Mouse click > Run macro > select your macro (e.g. `measure_buttonName_advance1`). There's no easy to way to see at a glance if an object is linked to a macro, besides trying to reinsert the macro link, so make sure everything that you want linked is linked! Particularly if you are not auto-advancing slides, I recommend you check "Play sound" as well, so the button makes a sound (e.g. "Click") when clicked (to minimize confusion about whether it was clicked already or not).
@@ -72,7 +75,7 @@ _A typical view in VBA._ Here we are in the code for `Module 1`, specifically th
 _Viewing the UserForm object._ Here we are looking at the `UserForm` object, and can move around the fields, change how the fields look, and change how the form generally looks. At right we have the Toolbox, with which we can add new fields (View > Toolbox if you can't see the Toolbox menu). At bottom left we have the Properties menu, where we can see that `condition` is a `ListBox` object (`ListBox` only accepts specified values).
 
 ![View in VBA looking at the UserForm code](/readme_images/VBA_UserForm_code.png)
-_Viewing the UserForm code._ Here we are looking at the `UserForm` code, specifically how the UserForm is initialized. Note that `condition` is initialized with specified values for `condition`: "condition1", "condition2", and "condition3".
+_Viewing the UserForm code._ Here we are looking at the `UserForm` code, specifically how the UserForm is initialized. Note that the form field `condition` is initialized with specified values for `condition` ("condition1", "condition2", and "condition3") that users can choose from.
 
 # Running participants live
 - **Make sure `data.xlsx`, the Excel data sheet, is closed** so PowerPoint can edit it.
@@ -82,8 +85,8 @@ _Viewing the UserForm code._ Here we are looking at the `UserForm` code, specifi
   - Edit the `condition` options in `UserForm` to be something non-transparent to the participant, and then have `UserForm` reassign the actual name of the condition when saving the value of `condition` to `data`.
   - If you use 2 monitors and see your slideshow on both (e.g. sharing slides, not sharing presenter view), pop-ups will appear on whichever window you click the button. So if you click pop-up buttons like "Setup" on the non-shared screen, pop-up will appear on non-shared screen.
 - You can run your slides and click macros in any order or number of times. Note that clicking macros(s) on the same slide (or different slides with the same Title) multiple times will overwrite the same value in `data`, since they share the same `key` (slide title). The *last* pressed macro will store the final response.
-- **`data` will be lost if you exit slideshow before running `SaveToExcel`**. You can jump between slides without exiting slideshow by right-clicking anywhere on the slide in slideshow > See all slides > select a slide. Be prepared to reference your recording as a backup in case of premature exit.
-- You may run multiple participants in the same PowerPoint session, since the code will autoreset the `data` dictionary when setting up, and `data` is also cleared when you exit slideshow.
+- **`data` will be lost if you exit slideshow before running a `SaveToExcel` macro**. You can jump between slides without exiting slideshow by right-clicking anywhere on the slide in slideshow > See all slides > select a slide. Record your sessions, and be prepared to reference your recording as a backup in case of data loss/premature exit.
+- You may run multiple participants in the same PowerPoint session, since the code will autoreset the `data` dictionary during initial setup, and `data` is also cleared when you exit slideshow.
 
 
 # Editing the VBA code
@@ -92,12 +95,13 @@ Open VBA in PowerPoint: Developer > Visual Basic.
 Tips for editing in VBA:
 - Remember to always declare your variables (e.g. `Dim`, `Public` if you want to access them throughout your code, or `Private`) before you initialize them.
 - Remember to end your loops with the corresponding `End` (e.g. an `If` requires an `End If`).
+- Check that your types match/are appropriate. `CStr()` coerces non-`String` types into a `String`, and [here are some other coersion functions](https://docs.microsoft.com/en-us/office/vba/language/concepts/getting-started/type-conversion-functions).
 - VBA does not automatically wrap your code. Add ` _ ` (space _ space) at the end of a line to continue code on the next line. Or write your code in a code editor like [Atom](https://atom.io/) (Atom: File > Settings > Packages > install `language-vba` for VBA syntax highlighting).
 - Comment your code! `'` begins a comment.
 - Test run test run test run. Build and test new code in small steps so you can more easily isolate problems when your code breaks.
 
 Tips for PowerPoint when editing in VBA:
-- In PowerPoint, you can find/edit names of objects in Home > Select > Selection Pane, and names of slides in View > Outline View.
+- In PowerPoint, you can find/edit names of objects in Home > Select > Selection Pane, and titles of slides in View > Outline View. Note that slide titles (indicated by title text and in Outline View) are apparently different from slide names (an internal name indicated when you open a slide in VBA, somewhat difficult to change).
 - If you rename a macro, you'll need to relink the buttons that used to reference that macro to that macro. There is no easy way to tell at a glance if a button is linked to a macro or not, so be careful, double-check your links by trying to reinsert a link, and always test run.
 
 Debugging VBA:
@@ -107,7 +111,7 @@ Debugging VBA:
 - If the Excel file did not update, or if a button that should have done something didn't do something, check your code for errors.
 - If the Excel file is locked for editing when you open it, force quit Excel from Task Manager and check your code for errors.
 
-If you're stuck, here are some resources. Most info online is about Excel, but it will usually transfer with minor tweaks (worksheet -> slide, etc)
+If you're stuck, here are some VBA resources. Most info online is about Excel, but it will usually transfer with minor tweaks.
 - Google "VBA" and whatever you're stuck on.
 - [Microsoft Office VBA documentation](https://docs.microsoft.com/en-us/office/vba/api/overview/powerpoint)
 - On scripting dictionary specifically: [Microsoft documentation on the Dictionary object](https://docs.microsoft.com/en-us/office/vba/language/reference/user-interface-help/dictionary-object), [Excel VBA Dictionary](https://excelmacromastery.com/vba-dictionary), [dictionary vs collection vs array](https://stackoverflow.com/questions/32479842/comparison-of-dictionary-collections-and-arrays)
