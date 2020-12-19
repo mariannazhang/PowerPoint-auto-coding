@@ -13,7 +13,7 @@ This code works by creating a [**scripting dictionary**](https://docs.microsoft.
 `Items` (responses) are recorded when buttons are clicked, using your choice of a variety of macros (i.e., sub/subroutines) that are activated on click:
 - **`measure_buttonName`**: **the main workhorse**. Takes the name of the button clicked (as seen in Home > Select > Selection Pane) as the response.
 - `measure_buttonText`: Takes the text within the button clicked as the response. More limited use cases than measure_buttonName, but works if you're too lazy to rename all your objects and your objects are textboxes containing response text anyway.
-- `measure_buttonNameAsKey`: Unlike the other macros, this macro takes the name of the button clicked as the `key`. It records "pressed" as the response. Used in situations where you have a variety of objects on a slide and you want to record which/how many are clicked.
+- `measure_buttonNameAsKey`: Unlike the other macros, this macro takes the name of the button clicked as the `key`. It records "clicked" as the response. Used in situations where you have a variety of objects on a slide and you want to record which/how many are clicked.
 - `measure_textEntry_popOut`: Takes the text provided in a pop-out text entry box as the response. Works for transcribing open-ended responses.
 - `measure_allocation`: Calculates the number of target objects (objects whose name includes `target`) that are closer to each of 2 anchor objects (objects or groups of objects whose name includes `anchor`). Return *2 key-item pairs*: key is cleaned name of anchor object  (removes "anchor" (case-insensitive) and surrounding underscores), item is number of target objects closer to that anchor vs the other anchor. Designed for generalized resource allocation measures where you exit slideshow, move objects around, and then resume slideshow.
 - Feel free to make more macros/subs if you need to collect more kinds of responses!
@@ -24,7 +24,7 @@ Here is a summary table of all of the currently available macros to record respo
 | ----------------------------- |----------------------------| --------------------|
 | **`measure_buttonName`**      | **slide title**            | **button name**     |
 | `measure_buttonText`          | slide title                | button text         |
-| `measure_buttonNameAsKey`     | button name                | "pressed"           |
+| `measure_buttonNameAsKey`     | button name                | "clicked"           |
 | `measure_textEntry_popOut`    | slide title                | pop-out text entry  |
 | `measure_allocation`          | cleaned name of 1st anchor object  | number of targets closer to this anchor than the other anchor |
 |       (^continued)            | cleaned name of 2nd anchor object  | number of targets closer to this anchor than the other anchor |
@@ -115,15 +115,18 @@ _Viewing the UserForm code._ Here we are looking at the `UserForm` code, specifi
 Open VBA in PowerPoint: Developer > Visual Basic.
 
 Tips for editing in VBA:
+- Always declare your variables (e.g. `Dim`, `Public`, or `Private`) before you initialize them. `Public` is useful if you want to be able to reference the variable/function outside of its block.
+- Be aware that objects (annoyingly) vary in whether they are 0-indexed (1st item is in position 0) or 1-indexed (1st item is in position 1). Arrays are by default 0-indexed, although you can set the starting index to be something else. Strings and collections are 1-indexed.
 - Useful functions for dealing with the `data` dictionary:
   - `data(key) = item` stores the item under the key. If the key already exists, the previous item is overwritten. If the key did not exist, it will create a new pair.
   - `data(key)` calls the item stored under the key.
-  - `data.Keys` calls all the keys, and `data.Items` calls all the items. Remember VBA is 0-indexed, so `data.Items(0)` calls the 1st item, `data.Items(1)` the 2nd, and so forth.
-- Remember to always declare your variables (e.g. `Dim`, `Public` if you want to access them throughout your code, or `Private`) before you initialize them.
+  - `data.Keys` calls all the keys, and `data.Items` calls all the items. Note that these functions return arrays, which are 0-indexed in VBA, so `data.Items(0)` calls the 1st item, `data.Items(1)` the 2nd, and so forth.
 - Remember to end your loops with the corresponding `End` (e.g. an `If` requires an `End If`).
 - Check that your types match/are appropriate. `CStr()` coerces non-`String` types into a `String`, and [here are some other coersion functions](https://docs.microsoft.com/en-us/office/vba/language/concepts/getting-started/type-conversion-functions).
+
 - VBA does not automatically wrap your code. Add ` _ ` (space _ space) at the end of a line to continue code on the next line. Or write your code in a code editor like [Atom](https://atom.io/) (Atom: File > Settings > Packages > install `language-vba` for VBA syntax highlighting).
 - Comment your code! `'` begins a comment.
+
 - Test run test run test run. Build and test new code in small steps so you can more easily isolate problems when your code breaks.
 
 Tips for PowerPoint when editing in VBA:
