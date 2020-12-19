@@ -38,7 +38,7 @@ Most of the above macros have different versions depending on how you want to ad
 - `_advance2`: Advances 2 slides. Useful for jumping slides during 2-step contingent measures.
 
 2 important macros everyone will need to use:
-- `Setup`: Initializes `data`, sets the session as "in progress", and collects some setup info. Customize this macro's associated UserForm based on your study specifics and what setup info you want researchers to input.
+- `Setup`: Initializes `data`, sets the session as "in progress", collects some setup info via a UserForm. Customize this macro's associated UserForm based on your study specifics and what setup info you want researchers to input. `Setup` also writes setup info to Excel by calling `inProgress_SaveToExcel`, so you can setup and quit slideshow if you'd like before your participant arrives.
 - `SaveToExcel_end`: Saves the scripting dictionary `data` to the Excel datasheet `data.xlsx` by:
   - If header row is empty, assigns the `key`s in the order they were collected.
   - Pick out a target row. Look for a row "in progress" to continue writing to; otherwise, scan down the first column and pick out the first empty row.
@@ -98,14 +98,14 @@ _Viewing the UserForm code._ Here we are looking at the `UserForm` code, specifi
 
 # Running participants live
 - **Make sure `data.xlsx`, the Excel data sheet, is closed** so PowerPoint can edit it.
-- If you'd like to fill out the setup form without the participant seeing it (e.g. so participant/guardian are blind to condition), you have a few options:
-  - Share screen to share your slideshow. Click "pause share" to freeze the screen share, click "Setup" to fill out the form, and then click "resume share" once you're done with the form. The participant will see a frozen screen while you're filling it out.
-  - Launch the slideshow and fill out the "Setup" form on your own *before* you share your screen. Note that exiting slideshow prematurely will erase saved data, so instead of exiting slideshow, you should tab out of slideshow (`Alt + Tab` on Windows or `Cmd + Tab` on Mac to switch between open windows, or try swiping left or right on your mousepad with 3 fingers). Tab over to Zoom, share screen to share your slideshow, and you should return to slideshow.
-  - Edit the `condition` options in `UserForm` to be something non-transparent to the participant, and then have `UserForm` reassign the actual name of the condition when saving the value of `condition` to `data`.
-  - If you use 2 monitors and see your slideshow on both (e.g. sharing slides, not sharing presenter view), pop-ups will appear on whichever window you click the button. So if you click pop-up buttons like "Setup" on the non-shared screen, pop-up will appear on non-shared screen.
+- Click "Setup" to run `Setup` and fill out the setup form.
+  - It's recommended you fill out the setup form before the participant arrives, so the participant/guardian are blind to condition. You may exit slideshow after completing the setup form, because `Setup` will save everything to Excel (using `inProgress_SaveToExcel`). When the participant arrives and you restart the slideshow, be sure to click "resume" (`inProgress_resume`) to pick up from where you left off.
+  - Alternatively, you can fill out the form with the participant present, but be aware that the participant/guardian may not be blind to condition if they see you filling out the form. Click "pause share" in Zoom to freeze the screen share, click "Setup" to fill out the form, and then click "resume share" once you're done with the form. The participant will see a frozen screen while you're filling it out.
+- If you use 2 monitors and see your slideshow on both (e.g. sharing slides, not sharing presenter view), pop-ups will appear on whichever window you click the button. So if you click pop-up buttons like "Setup" on the non-shared screen, pop-up will appear on non-shared screen.
 - You can run your slides and click macros in any order or number of times. Note that clicking macros(s) on the same slide (or different slides with the same Title) multiple times will overwrite the same item in `data`, since they share the same `key` (slide title). The *last* pressed macro will store the final response.
 - **`data` will be lost if you exit slideshow before running a `SaveToExcel` macro**.
-  - You can jump between slides without exiting slideshow by right-clicking anywhere on the slide in slideshow > See all slides > select a slide.
+  - To jump between *slides* without exiting slideshow, right-clicking anywhere on the slide in slideshow > See all slides > select a slide.
+  - To switch between *windows* without exiting slideshow, tab out of slideshow using `Alt + Tab` on Windows or `Cmd + Tab` on Mac, or try swiping left or right on your mousepad with 3 fingers.
   - If the session is ended early, and won't be picked up, jump to the last slide and run `SaveToExcel_end`. Otherwise, check that "in_progress" is set to "no".
   - Record your sessions, and be prepared to reference your recording as a backup in case of data loss/premature exit.
 - You may run multiple participants in the same PowerPoint session, since the code will autoreset the `data` dictionary during initial setup, and `data` is also cleared when you exit slideshow.
