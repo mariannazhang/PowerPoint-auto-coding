@@ -15,7 +15,7 @@ This code works by creating a [**scripting dictionary**](https://docs.microsoft.
 - `measure_buttonText`: Takes the text within the button clicked as the response. More limited use cases than measure_buttonName, but works if you're too lazy to rename all your objects and your objects are textboxes containing response text anyway.
 - `measure_buttonNameAsKey`: Unlike the other macros, this macro takes the name of the button clicked as the `key`. It records "pressed" as the response. Used in situations where you have a variety of objects on a slide and you want to record which/how many are clicked.
 - `measure_textEntry_popOut`: Takes the text provided in a pop-out text entry box as the response. Works for transcribing open-ended responses.
-- `measure_allocation`: Calculates the number of target objects (objects whose name includes `target`) that are closer to each of 2 anchor objects (objects or groups of objects whose name includes `anchor`). Return *2 key-item pairs*: key is name of anchor object, item is number of target objects closer to that anchor vs the other anchor. Designed for generalized resource allocation measures where you exit slideshow, move objects around, and then resume slideshow.
+- `measure_allocation`: Calculates the number of target objects (objects whose name includes `target`) that are closer to each of 2 anchor objects (objects or groups of objects whose name includes `anchor`). Return *2 key-item pairs*: key is cleaned name of anchor object  (removes "anchor" (case-insensitive) and surrounding underscores), item is number of target objects closer to that anchor vs the other anchor. Designed for generalized resource allocation measures where you exit slideshow, move objects around, and then resume slideshow.
 - Feel free to make more macros/subs if you need to collect more kinds of responses!
 
 Here is a summary table of all of the currently available macros to record responses:
@@ -26,8 +26,8 @@ Here is a summary table of all of the currently available macros to record respo
 | `measure_buttonText`          | slide title                | button text         |
 | `measure_buttonNameAsKey`     | button name                | "pressed"           |
 | `measure_textEntry_popOut`    | slide title                | pop-out text entry  |
-| `measure_allocation`          | name of 1st anchor object  | number of targets closer to this anchor than the other anchor |
-|       (^continued)            | name of 2nd anchor object  | number of targets closer to this anchor than the other anchor |
+| `measure_allocation`          | cleaned name of 1st anchor object  | number of targets closer to this anchor than the other anchor |
+|       (^continued)            | cleaned name of 2nd anchor object  | number of targets closer to this anchor than the other anchor |
 
 *Slide titles* can be seen/edited in View > Outline View, or by directly editing the title textbox.
 *Object/button names* can be edited in Home > Select > Selection Pane.
@@ -60,7 +60,7 @@ A few helper macros to reset target objects on slides (designed for resource all
 0. Clone/fork this repo, or download the files here as a .zip and unzip them into a folder.
 1. Clear the contents of `data.xlsx`. Add your desired column names to the header row.
   - Make sure to include a column named "in_progress".
-  - Use the *exact* same text as your keys (generally slide titles), so `SaveToExcel` can appropriately assign participants' responses.
+  - Use the *exact* same text in your columns as your keys, so `SaveToExcel` can appropriately assign participants' responses. Note that for `measure_allocation`, you should remove the "anchor" and surrounding underscores from the column, since the macro will automatically clean that part of the key.
   - You can add more columns than macros assign in your slides (e.g. "parental_interference", "exp_error", "comments"). Such columns will be left blank (e.g. for manual entry after running).
   - If you choose not to specify a header row, `SaveToExcel` will automatically fill in a header row using the `keys` *in the order they were collected*.
 2. Open `stimuli.pptm` (`.pptm` means it's macro-enabled) in PowerPoint. Adapt the template slides to be your stimuli slides.
