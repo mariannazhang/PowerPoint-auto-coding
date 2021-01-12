@@ -68,8 +68,9 @@ Helper macros to reset target objects on slides (designed for resource allocatio
 - You can rename the `data` folder and `data.xlsx` to anything you want, but make sure to adjust the directory for `data.xlsx` in the `SaveToExcel` helper function.
 - You can also move `data.xlsx` and `stimuli.pptm` to be in the same folder if you prefer, but make sure to adjust the directory for `data.xlsx` in `SaveToExcel` and `inProgress_SaveToExcel`.
 1. Clear the contents of `data.xlsx`. Add your desired column names to the header row (row 1).
-  - Make sure to include a column named "in_progress" somewhere.
-  - Use the *exact* same text in your column header as your keys, so `SaveToExcel` can appropriately assign participants' responses. Note: if you are using `measure_allocation`, remove "anchor" and (if present) any surrounding underscores from the column name, since the `measure_allocation` macro will automatically clean that part of the key.
+  - Make sure the datasheet is the very first sheet in the workbook.
+  - Make sure to include a column named "in_progress" somewhere, as well as columns named "file" and "test_date" if you are automating "file" as in the template code.
+  - Use the *exact* same text in your column header as your keys, so `SaveToExcel` can appropriately assign participants' responses. Important exception: if you are using `measure_allocation`, remove "anchor" and (if present) any surrounding underscores from the column name, since the `measure_allocation` macro will automatically clean that part of the key.
   - You can add more columns than macros assign in your slides (e.g. "parental_interference", "exp_error", "comments"). Such columns will be left blank (e.g. for manual entry after the session).
   - If you choose not to specify a header row, `SaveToExcel` will automatically fill in a header row using the `keys` *in the order they were collected*.
 2. Open `stimuli.pptm` (`.pptm` means it's macro-enabled) in PowerPoint. Adapt the template slides to be your stimuli slides.
@@ -125,14 +126,14 @@ _Viewing the UserForm code._ Here we are looking at the `UserForm` code, specifi
 Open VBA in PowerPoint: Developer > Visual Basic.
 
 Tips for editing in VBA:
-- Always declare your variables (e.g. `Dim`, `Public`, or `Private`) before you initialize them. `Public` is useful if you want to be able to reference the variable/function outside of its block.
+- Always declare your variables (using e.g. `Dim`, `Public`, or `Private`) before you initialize them. `Public` is useful if you want to be able to reference the variable/function outside of its block.
+- Check your types. `Variant` can helpfully take on a variety of types, including an error (which can be checked using `IsError()`). Other types will generally crash if you feed them an error. `CStr()` coerces non-`String` types into a `String`, and [here are some other coersion functions](https://docs.microsoft.com/en-us/office/vba/language/concepts/getting-started/type-conversion-functions).
 - Be aware that objects (annoyingly) vary in whether they are 0-indexed (1st item is in position 0) or 1-indexed (1st item is in position 1). Arrays are by default 0-indexed, although you can set the starting index to be something else. Strings and collections are 1-indexed.
 - Useful functions for dealing with the `data` dictionary:
   - `data(key) = item` stores the item under the key. If the key already exists, the previous item is overwritten. If the key did not exist, it will create a new pair.
   - `data(key)` calls the item stored under the key.
   - `data.Keys` calls all the keys, and `data.Items` calls all the items. Note that these functions return arrays, which are 0-indexed in VBA, so `data.Items(0)` calls the 1st item, `data.Items(1)` the 2nd, and so forth.
 - Remember to end your loops with the corresponding `End` (e.g. an `If` requires an `End If`).
-- Check that your types match/are appropriate. `CStr()` coerces non-`String` types into a `String`, and [here are some other coersion functions](https://docs.microsoft.com/en-us/office/vba/language/concepts/getting-started/type-conversion-functions).
 
 - VBA does not automatically wrap your code. Add ` _ ` (space _ space) at the end of a line to continue code on the next line. Or write your code in a code editor like [Atom](https://atom.io/) (Atom: File > Settings > Packages > install `language-vba` for VBA syntax highlighting).
 - Comment your code! `'` begins a comment.
