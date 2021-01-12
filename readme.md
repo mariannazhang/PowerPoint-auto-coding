@@ -1,7 +1,7 @@
 # About this code
-The purpose of this code is to automatically code responses from running children live using PowerPoint stimuli. This code was written in Visual Basic ("VBA") for PowerPoint on Windows in Dec 2020, but should work for PowerPoint on Mac with minor changes (filepath directory). I'm not sure if there's anything like this for Keynote.
+The purpose of this code is to automatically code responses from running children live using PowerPoint stimuli to a long format Excel datasheet. This code was written in Visual Basic ("VBA") for PowerPoint on Windows in Dec 2020, but should work for PowerPoint on Mac with minor changes (filepath directory). I'm not sure if there's anything like this for Keynote.
 
-The template slides (`stimuli.pptm`) are adapted from the [online testing slides from Stanford Social Learning Lab](http://github.com/sociallearninglab/online_testing_materials), and are designed for use by researchers who run live testing sessions by sharing screen to share a PowerPoint slideshow on Zoom.
+The template slides (`stimuli.pptm`) are adapted from the [online testing slides from Stanford's Social Learning Lab](http://github.com/sociallearninglab/online_testing_materials), and are designed for use by researchers who run live testing sessions by sharing a PowerPoint slideshow on Zoom.
 
 ## Why run children live using PowerPoint
 PowerPoint allows researchers to easily present their studies in a rich and engaging format. PowerPoint supports simple animations and sounds that make the experience much more dynamic and engaging, as opposed to filling out a static Qualtrics survey together. Increased engagement can not only benefit data quality for that study, but also creates a more positive and fun experience that incentivizes parents/guardians and children to return for future studies.
