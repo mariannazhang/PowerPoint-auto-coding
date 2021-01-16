@@ -3,6 +3,8 @@ The purpose of this code is to automatically code responses from running childre
 
 The template slides (`stimuli.pptm`) are adapted from the [online testing slides from Stanford's Social Learning Lab](http://github.com/sociallearninglab/online_testing_materials), and are designed for use by researchers who run live testing sessions by sharing a PowerPoint slideshow on Zoom.
 
+There is [an hour long basic video demo of this code](https://stanford.zoom.us/rec/share/vdNnPylMm5UP4nQPozZBKW5riLCHA2-70kaw1uvOUkWbNCb6pE-Ob86nrFj5__lm.3sALdzZfGmAkHRZ4?startTime=1610750420000) (recorded January 15, 2021) available, although this readme goes in more depth and is more up-to-date than the video demo. Apologies for the screen share difficulties in the demo! 
+
 ## Why run children live using PowerPoint
 PowerPoint allows researchers to easily present their studies in a rich and engaging format. PowerPoint supports simple animations and sounds that make the experience much more dynamic and engaging, as opposed to filling out a static Qualtrics survey together. Increased engagement can not only benefit data quality for that study, but also creates a more positive and fun experience that incentivizes parents/guardians and children to return for future studies.
 
@@ -94,7 +96,7 @@ _Linking a macro._ Here the object is linked to the `measure_buttonName_advance1
 7. **Open VBA** (Developer menu > Visual Basic).  Click Tools at the top > References > make sure "Microsoft Scripting Runtime" is checked. (Dictionaries are not native to VBA, so this makes sure VBA can reference its home environment, Microsoft Scripting Runtime.)
 8. **Customize the main code as desired**. Go over to the left-hand Project Explorer sidebar. (If you don't see it, Ctrl + R, or View > Project Explorer). Click `Module1` to bring up the main code.
   - Customize the "file" text in the `SaveToExcel` function.
-  - If you changed the `data.xlsx` name or directory, edit the `data.xlsx` filepath in the `SaveToExcel` helper function. 
+  - If you changed the `data.xlsx` name or directory, edit the `data.xlsx` filepath in the `SaveToExcel` helper function.
   - If you are using `reset` macros, manually specify which slide must be reset, since slide reference in this macro is currently hard coded.
 
 ![View in VBA looking at Module 1, with SaveToExcel macro selected](/readme_images/VBA.png)
