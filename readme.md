@@ -1,5 +1,5 @@
 # About this code
-The purpose of this code is to automatically code responses from running children live using PowerPoint stimuli to a long format Excel datasheet. This code was written in Visual Basic ("VBA") for PowerPoint on Windows in Dec 2020, but should work for PowerPoint on Mac with minor changes (filepath directory). I'm not sure if there's anything like this for Keynote.
+The purpose of this code is to automatically code responses from running children live using PowerPoint stimuli to a long format Excel datasheet. This code was written in Visual Basic ("VBA") for PowerPoint on Windows in Dec 2020, but should work for PowerPoint on Mac (not tested, but should work). I'm not sure if there's anything like this for Keynote.
 
 The template slides (`stimuli.pptm`) are adapted from the [online testing slides from Stanford's Social Learning Lab](http://github.com/sociallearninglab/online_testing_materials), and are designed for use by researchers who run live testing sessions by sharing a PowerPoint slideshow on Zoom.
 
@@ -45,7 +45,7 @@ Most of the above macros have different versions depending on how you want to ad
 2 important macros everyone will need to use:
 - `Setup`: Initializes `data`, sets the session as "in progress", collects some setup info via a UserForm. Customize this macro's associated UserForm based on your study specifics and what setup info you want researchers to input. `Setup` also writes setup info to Excel by calling `inProgress_SaveToExcel`, so you can setup and quit slideshow if you'd like before your participant arrives.
 - `SaveToExcel_end`: Calls the function `SaveToExcel`, which saves the scripting dictionary `data` to the Excel datasheet `data.xlsx` by:
-  - Finding the datasheet `data.xlsx`. Note: if you are on a Mac, or have messed with the directory path, change the filepath to `data.xlsx`.
+  - Finding the datasheet `data.xlsx`.
   - If header row is empty, assigns the `key`s in the order they were collected.
   - Pick out a target row. Look for a row "in_progress" to continue writing to; otherwise, scan down the first column and pick out the first empty row.
   - Sets participant number based on target row, and calculates the file text.
@@ -66,7 +66,7 @@ Helper macros to reset target objects on slides (designed for resource allocatio
 0. **Clone/fork this repo**, or **download the files** here as a .zip and unzip them into a folder.
 - You can rename the `materials` folder and `stimuli.pptm` to anything you want.
 - You can rename the `data` folder and `data.xlsx` to anything you want, but make sure to adjust the reference/filepath to `data.xlsx` in the `SaveToExcel` function.
-- You can also move `data.xlsx` and `stimuli.pptm` to be in the same folder if you prefer, but make sure to adjust the directory for `data.xlsx` in `SaveToExcel` and `inProgress_SaveToExcel`.
+- You can also move `data.xlsx` and `stimuli.pptm` to be in the same folder if you prefer, but make sure to adjust the filepath to `data.xlsx` in the `SaveToExcel` function.
 1. **Clear and customize the datasheet** `data.xlsx`. Clear all data, and add your desired column names to the header row (row 1) in Excel.
   - Make sure the datasheet is the very first sheet in the workbook (you can have subsequent sheets afterwards if you'd like).
   - Make sure to include the following columns: "in_progress" (to allow pause/restarts), "file", and "test_date" (both needed to automate "file").
@@ -92,9 +92,9 @@ _A typical slide._ It has a Title, here just off-screen (`measure2`), that gives
 _Linking a macro._ Here the object is linked to the `measure_buttonName_advance1` macro. Note the "Play sound" option if you'd like to play a sound, in addition to running the macro, when the object is clicked.
 
 7. **Open VBA** (Developer menu > Visual Basic).  Click Tools at the top > References > make sure "Microsoft Scripting Runtime" is checked. (Dictionaries are not native to VBA, so this makes sure VBA can reference its home environment, Microsoft Scripting Runtime.)
-8. **Customize the main code as desired**. Go over to the left-hand Project Explorer sidebar. (If you don't see it, Ctrl + R, or View > Project Explorer). Click `Module 1` to bring up the main code.
+8. **Customize the main code as desired**. Go over to the left-hand Project Explorer sidebar. (If you don't see it, Ctrl + R, or View > Project Explorer). Click `Module1` to bring up the main code.
   - Customize the "file" text in the `SaveToExcel` function.
-  - If you are on a Mac, and/or changed the `data.xlsx` directory, edit the `data.xlsx` filepath in the `SaveToExcel` and `inProgress_saveToExcel` macros.
+  - If you changed the `data.xlsx` name or directory, edit the `data.xlsx` filepath in the `SaveToExcel` helper function. 
   - If you are using `reset` macros, manually specify which slide must be reset, since slide reference in this macro is currently hard coded.
 
 ![View in VBA looking at Module 1, with SaveToExcel macro selected](/readme_images/VBA.png)
