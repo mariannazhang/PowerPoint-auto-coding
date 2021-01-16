@@ -1,23 +1,23 @@
 # About this code
-The purpose of this code is to automatically code responses from running children live using PowerPoint stimuli to a long format Excel datasheet. This code was written in Visual Basic ("VBA") for PowerPoint on Windows in Dec 2020, but should work for PowerPoint on Mac (not tested, but should work). I'm not sure if there's anything like this for Keynote.
+The purpose of this code is to automatically code responses from running children live using PowerPoint stimuli to an Excel datasheet (in long format, rather than tidy format). This code was written in Visual Basic ("VBA") for PowerPoint on Windows in December 2020, but should work for PowerPoint on Mac (not tested, but should work). I'm not sure if there's anything like this for Keynote.
 
 The template slides (`stimuli.pptm`) are adapted from the [online testing slides from Stanford's Social Learning Lab](http://github.com/sociallearninglab/online_testing_materials), and are designed for use by researchers who run live testing sessions by sharing a PowerPoint slideshow on Zoom.
 
-There is [an hour long basic video demo of this code](https://stanford.zoom.us/rec/share/vdNnPylMm5UP4nQPozZBKW5riLCHA2-70kaw1uvOUkWbNCb6pE-Ob86nrFj5__lm.3sALdzZfGmAkHRZ4?startTime=1610750420000) (recorded January 15, 2021) available, although this readme goes in more depth and is more up-to-date than the video demo. Apologies for the screen share difficulties in the demo! 
+There is [an hour long basic video demo of this code](https://stanford.zoom.us/rec/share/vdNnPylMm5UP4nQPozZBKW5riLCHA2-70kaw1uvOUkWbNCb6pE-Ob86nrFj5__lm.3sALdzZfGmAkHRZ4?startTime=1610750420000) (recorded January 15, 2021) available, although this readme goes in more depth and is more up-to-date than the video demo. Apologies for the screen share difficulties in the demo!
 
 ## Why run children live using PowerPoint
-PowerPoint allows researchers to easily present their studies in a rich and engaging format. PowerPoint supports simple animations and sounds that make the experience much more dynamic and engaging, as opposed to filling out a static Qualtrics survey together. Increased engagement can not only benefit data quality for that study, but also creates a more positive and fun experience that incentivizes parents/guardians and children to return for future studies.
+Microsoft PowerPoint allows researchers to easily present their studies in a rich and engaging format. PowerPoint supports simple animations and sounds that make the experience much more dynamic and engaging, as opposed to filling out a static [Qualtrics](https://www.qualtrics.com/) survey together. **Increased engagement can not only benefit data quality for that study, but also creates a more positive and fun experience that incentivizes parents/guardians and children to return for future studies.**
 
-PowerPoint is simple and easy for researchers to use, and many researchers have experience using PowerPoint already, as opposed to specialized animation software like Blender. Simple but engaging animations can be created using the "Morph" transition between slides (equivalent to Keynote "Magic Move"), or slide animations such as pulse and motion path animations.
+PowerPoint is **simple and easy for researchers to use**, and many researchers have experience using PowerPoint already, as opposed to specialized animation software like Blender. Simple but engaging animations can be created using the ["Morph" transition between slides](https://support.microsoft.com/en-us/office/use-the-morph-transition-in-powerpoint-8dd1c7b2-b935-44f5-a74c-741d8d9244ea) (equivalent to Keynote "Magic Move"), or slide animations such as pulse and motion path animations.
 
-A major drawback of using PowerPoint has been that participant responses are not automatically coded during the session (as they are when using a Qualtrics survey), so session must be recorded and a researcher must watch the recording after the fact to code participant responses. This code addresses that drawback by automatically coding responses during the session, which saves researcher time and increases coding reliability.
+A major drawback of using PowerPoint has been that participant responses are not automatically coded during the session (as they are when using a Qualtrics survey), so session must be recorded and a researcher must watch the recording after the fact to code participant responses. This code addresses that drawback by automatically coding responses during the session, which **saves researcher time and increases coding reliability**.
 
 ## How this code works
 This code works by creating a [**scripting dictionary**](https://docs.microsoft.com/en-us/office/vba/language/reference/user-interface-help/dictionary-object) called **`data`**, which contains *pairs* of keys and items:
-1. **`keys`**: column/measure names (e.g. "condition", "measure1", "measure2")
-2. **`items`**: this participant's response (e.g. "structural", "yes", "blue")
+1. **`keys`**: equivalent to column names in the datasheet (e.g. "condition", "measure1", "measure2")
+2. **`items`**: this participant's response for that key (e.g. "structural", "yes", "blue")
 
-These `key`-`item` pairs are generated by a variety of macros, which can linked to shapes in PowerPoint so the macros run when the shape is clicked. Most of these macros take `keys` (column/measure names) from the *slide titles* (as seen in View > Outline View). Here are the currently available macros:
+These `key`-`item` pairs are generated by a variety of macros. Macros can be activated by linking them to shapes in PowerPoint, so a specified macro runs when a shape is clicked. Most of the currently available macros take `keys` (column/measure names) from the *slide titles* (as seen in View > Outline View). Here are the currently available macros:
 - **`measure_buttonName`**: **the main workhorse**. Takes the name of the button clicked (as seen in Home > Select > Selection Pane) as the response.
 - `measure_buttonText`: Takes the text within the button clicked as the response. More limited use cases than measure_buttonName, but works if you're too lazy to rename all your objects and your objects are textboxes containing response text anyway.
 - `measure_buttonNameAsKey`: Unlike the other macros, this macro takes the name of the button clicked as the `key`. It records "clicked" as the response. Used in situations where you have a variety of objects on a slide and you want to record which/how many are clicked.
@@ -45,7 +45,8 @@ Most of the above macros have different versions depending on how you want to ad
 - `_advance2`: Advances 2 slides. Useful for jumping slides during 2-step contingent measures.
 
 2 important macros everyone will need to use:
-- `Setup`: Initializes `data`, sets the session as "in progress", collects some setup info via a UserForm. Customize this macro's associated UserForm based on your study specifics and what setup info you want researchers to input. `Setup` also writes setup info to Excel by calling `inProgress_SaveToExcel`, so you can setup and quit slideshow if you'd like before your participant arrives.
+- `Setup`: Initializes `data`, collects some setup info via a UserForm, sets "in_progress" as "yes", and writes setup info to Excel by calling `inProgress_SaveToExcel`, so you can setup and quit slideshow if you'd like before your participant arrives.
+  - Customize this macro's associated UserForm based on your study specifics and what setup info you want researchers to input.
 - `SaveToExcel_end`: Calls the function `SaveToExcel`, which saves the scripting dictionary `data` to the Excel datasheet `data.xlsx` by:
   - Finding the datasheet `data.xlsx`.
   - If header row is empty, assigns the `key`s in the order they were collected.
@@ -55,7 +56,7 @@ Most of the above macros have different versions depending on how you want to ad
   - Sets "in_progress" to "no".
 
 A pair of macros that allow exiting and resuming slideshow during a single participant's session:
-- `inProgress_SaveToExcel`: Just like `SaveToExcel_end`, it calls the function `SaveToExcel`, except it keeps "in_progress" as "yes", which allows subsequent macros to continue writing on the same row. Should be used immediately before exiting an in progress slideshow. Can be used multiple times throughout a study.
+- `inProgress_SaveToExcel`: Just like `SaveToExcel_end`, it calls the function `SaveToExcel`, except it sets "in_progress" as "yes", which allows subsequent macros to continue writing on the same row. Can be used multiple times throughout a study at any point, and should definitely be used before exiting an in progress slideshow.
 - `inProgress_resume`: Re-initializes the `data` dictionary. Should be used immediately after resuming an in progress slideshow. Can be used multiple times throughout a study.
 
 Helper macros to reset target objects on slides (designed for resource allocation using `measure_allocation`). *Note that which slide should be reset must be manually specified.*
@@ -80,7 +81,10 @@ Helper macros to reset target objects on slides (designed for resource allocatio
   - If you are using `measure_allocation` and its `reset` helper functions:
     - Objects that will be moved/counted should have names containing "target" (e.g. "target1"). The 2 objects (or groups of objects) that will be reference points for grouping should have names containing "anchor" (e.g. "measure9_lowPerf_anchor"). Note that if you name a group "target" or "anchor", do not also name each sub-object "target" or "anchor".
     - Your resource allocation slide should contain at least 3 buttons: `inProgress_SaveToExcel` (save before exiting slideshow), `inProgress_resume` (resume after restarting slideshow), and `measure_allocation` (count the allocation). You should also include the corresponding `reset` somewhere at the end so you can reset the target objects for the next participant, and can also include `reset` on the same allocation slide if participant wants to re-do the allocation. I recommend hiding all these buttons under wherever your video thumbnail will be to reduce visual clutter for the participant.
-3. **Add the Developer menu to your PowerPoint ribbon**. Home > Options > Customize Ribbon > scroll down the right-hand column and check "Developer". Go to the new Developer menu > click "Macro Security" to **make sure macros are enabled** (they are usually disabled by default for security reasons).
+3. **Add the Developer menu to your PowerPoint ribbon, and make sure macros are enabled**. At the top, File > Options > Customize Ribbon > scroll down the right-hand column and check "Developer". Go to the new Developer menu > click "Macro Security" > "Enable all macros" (they are usually disabled by default for security reasons).
+![Customize Ribbon menu. On the right-hand column, Developer is checked.](/readme_images/enableDeveloper.png)
+_Enabling the Developer menu._ Check "Developer" on the right-hand column.
+
 4. **Add *titles* to each slide where macros might collect slide titles**. Many macros (notably collect slide titles as a `key`, which will be the name of its column in `data.xlsx`. View > Outline View to check the titles of all your slides. If your slide lacks a title, double-click it in Outline View to add a title (ok to drag the resulting Title textbox off-screen, but a Title textbox *must* be present in Selection Pane). If you have a pre-existing header row in `data.xlsx`, be sure that your slide titles match the *exact* text in the header row, so `SaveToExcel` can appropriately assign participants' responses. Note: two slides can have the same title, but note that clicking macros on either slide will write to the same column, so only do this if you're okay overwriting responses or if participants will only responding on one of the slides (eg the 2nd step of a 2 step measure).
 5. **If you are using the `measure_buttonName` series of macros, set object names** in PowerPoint via Selection Pane: Home > Editing > Select > Selection Pane. Double click an object in the Selection Pane to edit its name.
 
@@ -93,23 +97,27 @@ _A typical slide._ It has a Title, here just off-screen (`measure2`), that gives
 
 _Linking a macro._ Here the object is linked to the `measure_buttonName_advance1` macro. Note the "Play sound" option if you'd like to play a sound, in addition to running the macro, when the object is clicked.
 
-7. **Open VBA** (Developer menu > Visual Basic).  Click Tools at the top > References > make sure "Microsoft Scripting Runtime" is checked. (Dictionaries are not native to VBA, so this makes sure VBA can reference its home environment, Microsoft Scripting Runtime.)
+7. **Open VBA, and enable Microsoft Scripting Runtime reference.** Open VBA by going to Developer menu > Visual Basic. In VBA, click Tools > References > make sure "Microsoft Scripting Runtime" is checked. (Dictionaries are not native to VBA, so this makes sure VBA can reference its home environment, Microsoft Scripting Runtime.)
+
+![VBA references menu, with Microsoft Scripting Runtime checked.](/readme_images/VBA_MicrosoftScriptingRuntime.png)
+_Enabling Microsoft Scripting Runtime reference._ Make sure Microsoft Scripting Runtime is checked.
+
 8. **Customize the main code as desired**. Go over to the left-hand Project Explorer sidebar. (If you don't see it, Ctrl + R, or View > Project Explorer). Click `Module1` to bring up the main code.
   - Customize the "file" text in the `SaveToExcel` function.
   - If you changed the `data.xlsx` name or directory, edit the `data.xlsx` filepath in the `SaveToExcel` helper function.
   - If you are using `reset` macros, manually specify which slide must be reset, since slide reference in this macro is currently hard coded.
 
 ![View in VBA looking at Module 1, with SaveToExcel macro selected](/readme_images/VBA.png)
-_A typical view in VBA._ Here we are in the code for `Module 1`, specifically the `SaveToExcel` macro. Note that the Project Manager sidebar is at the top left.
+_A typical view in VBA._ Here we are in the code for `Module1`, specifically the `SaveToExcel` helper function. Note that the Project Manager sidebar is at the top left.
 
 9. **Customize the setup userform**. Go to the left-hand Project Manager sidebar, and click `UserForm`.
 
 - Right-click `UserForm` > View Object to [edit the fields and aesthetics of the form](https://docs.microsoft.com/en-us/office/vba/powerpoint/how-to/create-custom-dialog-boxes). View > Toolbox to insert new fields: `TextBox` accepts any value, `ListBox` requires selecting from pre-specified values, `ComboBox` suggests pre-specified values but accepts other values too. Click on a field to see/edit its name on the sidebar; you will need to know its name to reference its value in the form code.
 
-- Right-click `UserForm` > View Code to edit the code behind the form, including how the values from each form field are saved to the `data` dictionary.
-
 ![View in VBA looking at the UserForm object](/readme_images/VBA_UserForm_object.png)
-_Viewing the UserForm object._ Here we are looking at the `UserForm` object, and can move around the fields, change how the fields look, and change how the form generally looks. At right we have the Toolbox, with which we can add new fields (View > Toolbox if you can't see the Toolbox menu). At bottom left we have the Properties menu, where we can see that `condition` is a `ListBox` object (`ListBox` only accepts specified values).
+_Viewing the UserForm object._ Here we are looking at the `UserForm` object, and can move around the fields, change how the fields look, and change how the form generally looks. At bottom we have the Toolbox, with which we can add new textboxes or fields (View > Toolbox if you can't see the Toolbox menu). At bottom left is the Properties menu, where we can see that the selected field is a `ListBox` object (`ListBox` only accepts specified values) named `condition`.
+
+- Right-click `UserForm` > View Code to edit the code behind the form, including how the values from each form field are saved to the `data` dictionary.
 
 ![View in VBA looking at the UserForm code](/readme_images/VBA_UserForm_code.png)
 _Viewing the UserForm code._ Here we are looking at the `UserForm` code, specifically how the UserForm is initialized. Note that the form field `condition` is initialized with specified values for `condition` ("condition1", "condition2", and "condition3") that users can choose from.
@@ -118,9 +126,9 @@ _Viewing the UserForm code._ Here we are looking at the `UserForm` code, specifi
 - **Make sure `data.xlsx`, the Excel data sheet, is closed** so PowerPoint can edit it.
 - **Click "Setup" to fill out the setup form before the participant arrives**.
   - It's recommended to fill out the setup form before the participant arrives, so the participant/guardian are blind to condition. You may exit slideshow after completing the setup form, because `Setup` will save everything to Excel (using `inProgress_SaveToExcel`). When the participant arrives and you restart the slideshow, be sure to click "resume" (`inProgress_resume`) to pick up from where you left off.
-  - Alternatively, you can fill out the form with the participant present, but be aware that the participant/guardian may not be blind to condition if they see you filling out the form. Click "pause share" in Zoom to freeze the screen share, click "Setup" to fill out the form, and then click "resume share" once you're done with the form. The participant will see a frozen screen while you're filling it out.
+  - Alternatively, you can fill out the form with the participant present, but be aware that the participant/guardian may not be blind to condition if they see you filling out the form. Click "pause share" in Zoom to freeze the screen share, click "Setup" to fill out the form, and then click "resume share" in Zoom once you're done with the form. The participant will see a frozen screen while you're filling it out.
 - If you use 2 monitors and see your slideshow on both (e.g. sharing slides, not sharing presenter view), pop-ups will appear on whichever window you click the button. So if you click pop-up buttons like "Setup" on the non-shared screen, pop-up will appear on non-shared screen.
-- You can run your slides and click macros in any order or number of times. Note that clicking macros(s) on the same slide (or different slides with the same Title) multiple times will overwrite the same item in `data`, since they share the same `key` (slide title). The *last* pressed macro will store the final response.
+- You can run your slides and click macros in any order or number of times. Note that if you try to write to the same `key` multiple times, the *last* written response will be the final response.
 - **`data` will be lost if you exit slideshow before running a `SaveToExcel` macro**.
   - To jump between *slides* without exiting slideshow, right-click anywhere on the slide in slideshow > See all slides > select a slide.
   - To switch between *windows* without exiting slideshow, tab out of slideshow using `Alt + Tab` on Windows or `Cmd + Tab` on Mac, or try swiping left or right on your mousepad with 3 fingers.
@@ -137,9 +145,9 @@ Tips for editing in VBA:
 - Check your types. `Variant` can helpfully take on a variety of types, including an error (which can be checked using `IsError()`). Other types will generally crash if you feed them an error. `CStr()` coerces non-`String` types into a `String`, and [here are some other coersion functions](https://docs.microsoft.com/en-us/office/vba/language/concepts/getting-started/type-conversion-functions).
 - Be aware that objects (annoyingly) vary in whether they are 0-indexed (1st item is in position 0) or 1-indexed (1st item is in position 1). Arrays are by default 0-indexed, although you can set the starting index to be something else. Strings and collections are 1-indexed.
 - Useful functions for dealing with the `data` dictionary:
-  - `data(key) = item` stores the item under the key. If the key already exists, the previous item is overwritten. If the key did not exist, it will create a new pair.
+  - `data(key) = item` stores the item under "key". If the key already exists, the previous item is overwritten. If the key did not exist, it will create a new pair.
   - `data(key)` calls the item stored under the key.
-  - `data.Keys` calls all the keys, and `data.Items` calls all the items. Note that these functions return arrays, which are 0-indexed in VBA, so `data.Items(0)` calls the 1st item, `data.Items(1)` the 2nd, and so forth.
+  - `data.Keys` calls all the keys, and `data.Items` calls all the items. Note: these functions return arrays, which are 0-indexed in VBA, so `data.Items(0)` calls the 1st item, `data.Items(1)` the 2nd, and so forth.
 - Remember to end your loops with the corresponding `End` (e.g. an `If` requires an `End If`).
 
 - VBA does not automatically wrap your code. Add ` _ ` (space _ space) at the end of a line to continue code on the next line. Or write your code in a code editor like [Atom](https://atom.io/) (Atom: File > Settings > Packages > install `language-vba` for VBA syntax highlighting).
