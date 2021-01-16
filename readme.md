@@ -88,25 +88,29 @@ Helper macros to reset target objects on slides (designed for resource allocatio
 _Enabling the Developer menu._ Check "Developer" on the right-hand column.
 
 3. **Adapt the template slides** `stimuli.pptm` (`.pptm` means it's macro-enabled) to your stimuli in PowerPoint.
-  - Unfortunately, only single objects can be linked to macros. Groups of objects cannot activate macros. You can link a single object in the group, draw an object on top of all of them, or use an image editor to replace them all with a single image.
 
 4. **Add *titles* to slides where macros collect slide titles**. View > Outline View to check the titles of all your slides. If your slide lacks a title, and a macro will be collecting the slide title, double-click the slide in Outline View to add a title. You can drag the Title textbox off-screen, but a Title *must* be present in Outline View.
   - If you have a pre-existing header row in `data.xlsx`, be sure that your slide titles match the *exact* text in the header row, so `SaveToExcel` can appropriately assign participants' responses.
   - Note: two slides can have the same title, but note that if macros on each slide collect the slide title as a `key`, you may overwrite responses to the same `key` (this may not be a problem if participants will only responding on one of the slides, e.g. the 2nd step of a 2 step measure).
 
 5. **Add *object names* to slides where macros collect object names**. Home > Editing > Select > Selection Pane. Double click an object in the Selection Pane to edit its name.
-  - If you are using `measure_allocation` and its `reset` helper functions, objects that will be moved/counted should have names containing "target" (e.g. "target1"). The 2 objects (or groups of objects) that will be reference points for grouping should have names containing "anchor" (e.g. "measure9_lowPerf_anchor"). Note that if you name a group "target" or "anchor", do not also name each sub-object "target" or "anchor".
 
 ![PowerPoint slide with pictures of blue berries and pink berries, and textbox reading "measure3" just off screen. Outline view is open on the left, showing slide titled measure 2. Selection pane is open on the right, showing objects named blueberries, pinkberries, Title 3, and Title 3.](/readme_images/slide.png)
 _A typical slide._ The slide has a Title, here just off-screen (`measure2`), that gives the slide its title in Outline View. Each response button (here, two pictures) is named in Selection Pane (here, as "blueberries", "pinkberries").
 
+  - If you are using `measure_allocation` and its `reset` helper functions, objects that will be moved/counted should have names containing "target" (e.g. "target1"). The 2 objects (or groups of objects) that will be reference points for grouping should have names containing "anchor" (e.g. "measure9_lowPerf_anchor"). Note that if you name a group "target" or "anchor", do not also name each sub-object "target" or "anchor".
+
+  ![PowerPoint slide with pictures of two schools, one on the left and the other on right side of the screen, and 6 books arranged vertically between them. Outline view is open on the left, showing slide titled measure10. Selection pane is open on the right, showing objects named blueberries, pinkberries, Title 3, and Title 3.](/readme_images/resourceAllocation.png)
+  _A resource allocation slide._ The slide has a Title, here just off-screen (`measure10`), that gives the slide its title in Outline View. In Selection Pane, each target object (here, 6 books) has a name containing "target", and each anchor object (here, the 2 schools) has a name containing "anchor". Note the three buttons for saving, resuming, and counting the allocation positioned under where the researcher's video thumbnail would go (in this case, top middle).
+
 6. **Link objects to whatever macros you want to run when the object is clicked.** Select an object > Insert > Action > Mouse click > Run macro > select your macro (e.g. `measure_buttonName_advance1`). Particularly if you are not auto-advancing slides, I recommend you check "Play sound" as well, so the button makes a sound when clicked (to minimize confusion about whether it was clicked already or not).
+  - Unfortunately, only single objects can be linked to macros. Groups of objects cannot activate macros. You can link a single object in the group, draw an object on top of all of them, or use an image editor to replace them all with a single image.
   - There's no easy to way to see at a glance if an object is linked to a macro, besides trying to reinsert the macro link, so make sure everything that you want linked is linked!
   - If you have a resource allocation slide, the slide should contain objects/buttons linked to each of 3 macros: `inProgress_SaveToExcel` (save before exiting slideshow), `inProgress_resume` (resume after restarting slideshow), and `measure_allocation` (count the allocation). You should also include the corresponding `reset` at the end of your slideshow so you can reset the target objects for the next participant, and can also include `reset` on the allocation slide itself in case participant wants to re-do the allocation. I recommend hiding all these buttons under wherever your video thumbnail will be, to reduce visual clutter for the participant.
 
 ![PowerPoint menu showing options for action button, including Run macro and Play sound](/readme_images/linkToMacro.png)
 
-_Linking a macro._ Here the object is linked to the `measure_buttonName_advance1` macro. Note the "Play sound" option if you'd like to play a sound, in addition to running the macro, when the object is clicked.
+_Linking an object to a macro._ Here the selected object is linked to the `measure_buttonName_advance1` macro. Note the "Play sound" option if you'd like to play a sound, in addition to running the macro, when the object is clicked.
 
 7. **Open VBA, and enable Microsoft Scripting Runtime reference.** Open VBA by going to Developer menu > Visual Basic. In VBA, click Tools > References > make sure "Microsoft Scripting Runtime" is checked. (Dictionaries are not native to VBA, so this makes sure VBA can reference its home environment, Microsoft Scripting Runtime.)
 
