@@ -1,9 +1,11 @@
 # About this code
-The purpose of this code is to automatically code responses from running children live using PowerPoint stimuli to an Excel datasheet (in long format, rather than tidy format). This code was written in Visual Basic ("VBA") for PowerPoint on Windows in December 2020, but should work for PowerPoint on Mac (not tested, but should work). I'm not sure if there's anything like this for Keynote.
+This code is for researchers running children in a live supervised setting using PowerPoint stimuli to an Excel datasheet (in long format, rather than tidy format). This code was developed in December 2020 in Visual Basic ("VBA") on Microsoft PowerPoint on Windows and, as of September 2021, also works for Microsoft PowerPoint 2016 for Mac. I'm not sure if there's anything like this for Keynote.
 
-The template slides (`stimuli.pptm`) are adapted from the [online testing slides from Stanford's Social Learning Lab](http://github.com/sociallearninglab/online_testing_materials), and are designed for use by researchers who run live testing sessions by sharing a PowerPoint slideshow on Zoom.
+The template slides (`stimuli.pptm`) are adapted from the [online testing slides from Stanford's Social Learning Lab](http://github.com/sociallearninglab/online_testing_materials), and are designed for use by researchers who run live testing sessions by sharing a PowerPoint slideshow on Zoom. The [dictionary custom class](https://github.com/VBA-tools/VBA-Dictionary) was created by Tim Hall.
 
-There is [an hour long basic video demo of this code](https://stanford.zoom.us/rec/share/vdNnPylMm5UP4nQPozZBKW5riLCHA2-70kaw1uvOUkWbNCb6pE-Ob86nrFj5__lm.3sALdzZfGmAkHRZ4?startTime=1610750420000) (recorded January 15, 2021) available, although this readme goes in more depth and is more up-to-date than the video demo. Apologies for the screen share difficulties in the demo!
+There is [an hour long basic video demo of this code](https://stanford.zoom.us/rec/share/vdNnPylMm5UP4nQPozZBKW5riLCHA2-70kaw1uvOUkWbNCb6pE-Ob86nrFj5__lm.3sALdzZfGmAkHRZ4?startTime=1610750420000) (recorded January 15, 2021) available, although there are some screen share difficulties in that video demo, and this readme is more up-to-date than the video demo.
+
+If you would just like to get started, skip down to one of the "Getting started" sections.
 
 ## Why run children live using PowerPoint
 Microsoft PowerPoint allows researchers to easily present their studies in a rich and engaging format. PowerPoint supports simple animations and sounds that make the experience much more dynamic and engaging, as opposed to filling out a static [Qualtrics](https://www.qualtrics.com/) survey together. **Increased engagement can not only benefit data quality for that study, but also creates a more positive and fun experience that incentivizes parents/guardians and children to return for future studies.**
@@ -13,7 +15,7 @@ PowerPoint is **simple and easy for researchers to use**, and many researchers h
 A major drawback of using PowerPoint has been that participant responses are not automatically coded during the session (as they are when using a Qualtrics survey), so session must be recorded and a researcher must watch the recording after the fact to code participant responses. This code addresses that drawback by automatically coding responses during the session, which **saves researcher time and increases coding reliability**.
 
 ## How this code works
-This code works by creating a [**scripting dictionary**](https://docs.microsoft.com/en-us/office/vba/language/reference/user-interface-help/dictionary-object) called **`data`**, which contains *pairs* of keys and items:
+This code works by creating a [**dictionary**](https://github.com/VBA-tools/VBA-Dictionary) called **`data`**, which contains *pairs* of keys and items:
 1. **`keys`**: equivalent to column names in the datasheet (e.g. "condition", "measure1", "measure2")
 2. **`items`**: this participant's response for that key (e.g. "structural", "yes", "blue")
 
@@ -67,35 +69,42 @@ Helper macros to reset target objects on slides (designed for resource allocatio
 
 
 
-# Getting started
-0. **Clone/fork this repo**, or **download the files** here as a .zip and unzip them into a folder.
+# Getting started: adding autocoding to new or pre-existing stimuli
+If you are creating new stimuli, or have pre-existing study materials that you'd like to add autocoding functionality to, follow the below steps.
+
+0. **Clone/fork this repo**, or **download the files** here as a .zip and unzip them.
 - You can rename the `materials` folder and `stimuli.pptm` to anything you want.
-- You can rename the `data` folder and `data.xlsx` to anything you want, but make sure to adjust the reference/filepath to `data.xlsx` in the `SaveToExcel` function.
-- You can also move `data.xlsx` and `stimuli.pptm` to be in the same folder if you prefer, but make sure to adjust the filepath to `data.xlsx` in the `SaveToExcel` function.
+- You can rename the `data` folder and `data.xlsx` to anything you want, or change the folder structure, but make sure to adjust the filepath accordingly in the `SaveToExcel` function so it can find the datasheet.
 
 1. **Clear and customize the datasheet** `data.xlsx`. Clear all data, and add your desired column names to the header row (row 1) in Excel.
   - Make sure the datasheet is the very first sheet in the workbook (you can have subsequent sheets afterwards if you'd like).
   - Make sure to include the following columns: "in_progress" (to allow pause/restarts), "file", and "test_date" (both needed to automate "file").
-  - Use the *exact* same text in your column header as your keys, so `SaveToExcel` can appropriately assign participants' responses. Important exception: if you are using `measure_allocation`, remove "anchor" and (if present) any surrounding underscores from the column name, since the `measure_allocation` macro will automatically clean that part of the key.
+  - Use the *exact* same text in your column header as your keys, so `SaveToExcel` can appropriately assign participants' responses. *Important exception*: if you are using `measure_allocation`, remove "anchor" and (if present) any surrounding underscores from the column name, since the `measure_allocation` macro will automatically clean that part of the key (eg "resource_allocation_high_anchor" gets cleaned to "resource_allocation_high").
   - You can add more columns than macros assign in your slides (e.g. "parental_interference", "exp_error", "comments"). Such columns will be left blank (e.g. for manual entry after the session).
   - If you choose not to specify a header row, `SaveToExcel` will automatically fill in a header row using the `keys` *in the order they were collected*.
 
   ![data.xlsx Excel sheet, showing header row of first sheet filled out in an otherwise empty sheet](/readme_images/Excel_headerRow.png)
 
-  _Setting up the datasheet's header row._ Note that the datasheet is the first sheet of the workbook, column names are specified in the first row, and there are columns called "in_progress", as well as columns called "file" and "test_date". The columns in red will not be written to from PowerPoint, so they will be left blank for manual entry.
+  _Setting up the datasheet's header row._ Note that the datasheet is the first sheet of the workbook, column names are specified in the first row, and there are columns called "in_progress", as well as columns called "file" and "test_date". The columns in red will not be written to from PowerPoint, and will be left blank for manual entry.
 
 
-2. **Open the template slides `stimuli.pptm`. Add the Developer menu to your PowerPoint ribbon, and make sure macros are enabled.** At the top, File > Options > Customize Ribbon > scroll down the right-hand column and check "Developer". Go to the new Developer menu > click "Macro Security" > "Enable all macros" (they are usually disabled by default for security reasons).
+2. **In PowerPoint, make sure macros are enabled.** Macros are usually disabled by default for security reasons.
+
+On PowerPoint for Windows, you'll need [add the Developer menu to your PowerPoint ribbon](https://support.microsoft.com/en-us/topic/show-the-developer-tab-e1192344-5e56-4d45-931b-e5fd9bea2d45), by going to File > Options > Customize Ribbon > scroll down the right-hand column and check "Developer". Go to the new Developer menu > click "Macro Security" > "Enable all macros (not recommended; potentially dangerous code can run)"
+
 ![Customize Ribbon menu. On the right-hand column, Developer is checked.](/readme_images/enableDeveloper.png)
-_Enabling the Developer menu._ Check "Developer" on the right-hand column.
+_Enabling the Developer menu on Windows._ Check "Developer" on the right-hand column.
+
+On PowerPoint 2016 for Mac, go to: PowerPoint > Preferences > Security & Privacy > Macro Security > "Enable all macros (not recommended; potentially dangerous code can run)"
 
 3. **Adapt the template slides** `stimuli.pptm` (`.pptm` means it's macro-enabled) to your stimuli in PowerPoint.
+  - If you already have your stimuli slides ready, and you just want to import the autocoding code from `stimuli.pptm`: Open `stimuli.pptm` > go to Developer > Visual Basic > right-click "Module1", "UserForm", "Dictionary" in the left-side project panel under `stimuli.pptm` > Export to somewhere. Then, open your stimuli slides, navigate to the project panel, right-click your stimuli filename > Import the files you just exported. "Module1", "UserForm", "Dictionary" should now show up in the project window.
 
 4. **Add *titles* to slides where macros collect slide titles**. View > Outline View to check the titles of all your slides. If your slide lacks a title, and a macro will be collecting the slide title, double-click the slide in Outline View to add a title. You can drag the Title textbox off-screen, but a Title *must* be present in Outline View.
   - If you have a pre-existing header row in `data.xlsx`, be sure that your slide titles match the *exact* text in the header row, so `SaveToExcel` can appropriately assign participants' responses.
   - Note: two slides can have the same title, but note that if macros on each slide collect the slide title as a `key`, you may overwrite responses to the same `key` (this may not be a problem if participants will only responding on one of the slides, e.g. the 2nd step of a 2 step measure).
 
-5. **Add *object names* to slides where macros collect object names**. Home > Editing > Select > Selection Pane. Double click an object in the Selection Pane to edit its name.
+5. **Add *object names* to slides where macros collect object names**. Home > Editing > Select > Selection Pane. Double click an object in the Selection Pane to edit its name. If you are counterbalancing the names of objects, remember to change these object names across different counterbalancing slidedecks.
 
 ![PowerPoint slide with pictures of blue berries and pink berries, and textbox reading "measure3" just off screen. Outline view is open on the left, showing slide titled measure 2. Selection pane is open on the right, showing objects named blueberries, pinkberries, Title 3, and Title 3.](/readme_images/slide.png)
 _A typical slide._ The slide has a Title, here just off-screen (`measure2`), that gives the slide its title in Outline View. Each response button (here, two pictures) is named in Selection Pane (here, as "blueberries", "pinkberries").
@@ -114,21 +123,14 @@ _A typical slide._ The slide has a Title, here just off-screen (`measure2`), tha
 
 _Linking an object to a macro._ Here the selected object is linked to the `measure_buttonName_advance1` macro. Note the "Play sound" option if you'd like to play a sound, in addition to running the macro, when the object is clicked.
 
-7. **Open VBA, and enable Microsoft Scripting Runtime reference.** Open VBA by going to Developer menu > Visual Basic. In VBA, click Tools > References > make sure "Microsoft Scripting Runtime" is checked. (Dictionaries are not native to VBA, so this makes sure VBA can reference its home environment, Microsoft Scripting Runtime.)
+7. **Open VBA.** On PowerPoint for Windows, open VBA by going to Developer menu > Visual Basic. On PowerPoint for Mac, go to Tools > Macros > Visual Basic Editor.
 
-![VBA references menu, with Microsoft Scripting Runtime checked.](/readme_images/VBA_MicrosoftScriptingRuntime.png)
-
-_Enabling Microsoft Scripting Runtime reference._ Make sure Microsoft Scripting Runtime is checked.
-
-8. **Customize the main code as desired**. Go over to the left-hand Project Explorer sidebar. (If you don't see it, Ctrl + R, or View > Project Explorer). Click `Module1` to bring up the main code.
-  - Customize the "file" text in the `SaveToExcel` function.
-  - If you changed the `data.xlsx` name or directory, edit the `data.xlsx` filepath in the `SaveToExcel` function.
-  - If you are using `reset` macros, manually specify which slide must be reset, since slide reference in this macro is currently hard coded.
+8. **Customize the main code**. Go over to the left-hand Project Explorer sidebar. (If you don't see it, Ctrl + R, or View > Project Explorer). Click `Module1` to bring up the main code. Ctrl+F through the code for "TODO" for places you should double-check and customize, e.g. the filepath to the datasheet, the slides to reset for resource allocation if relevant.
 
 ![View in VBA looking at Module 1, with SaveToExcel macro selected](/readme_images/VBA.png)
 _A typical view in VBA._ Here we are in the code for `Module1`, specifically the `SaveToExcel` function. Note that the Project Manager sidebar is at the top left.
 
-9. **Customize the setup userform**. Go to the left-hand Project Manager sidebar, and click `UserForm`.
+9. **Customize the setup userform**. Go to the left-hand Project Manager sidebar, and right-click `UserForm`.
 
 - Right-click `UserForm` > View Object to [edit the fields and aesthetics of the form](https://docs.microsoft.com/en-us/office/vba/powerpoint/how-to/create-custom-dialog-boxes). View > Toolbox to insert new fields: `TextBox` accepts any value, `ListBox` requires selecting from pre-specified values, `ComboBox` suggests pre-specified values but accepts other values too. Click on a field to see/edit its name on the sidebar; you will need to know its name to reference its value in the form code.
 
@@ -139,6 +141,26 @@ _Viewing the UserForm object._ Here we are looking at the `UserForm` object, and
 
 ![View in VBA looking at the UserForm code](/readme_images/VBA_UserForm_code.png)
 _Viewing the UserForm code._ Here we are looking at the `UserForm` code, specifically how the UserForm is initialized. Note that the form field `condition` is initialized with specified values for `condition` ("condition1", "condition2", and "condition3") that users can choose from.
+
+
+
+# Getting started: setting up your computer to run pre-existing autocoding stimuli
+If you have received pre-existing autocoding-enabled stimuli from someone, and would like to get it ready to run on a new computer, follow the below steps.
+
+1. **Check that your folder structure and filenames match what is expected.** Talk to the person who created the stimuli to find out how you should set up your folder structure. By default, `stimuli.pptm` will search up one level, and in a folder called "data" to find a datasheet called `data.xlsx`.
+
+2. **In PowerPoint, make sure macros are enabled.** Macros are usually disabled by default for security reasons.
+
+On PowerPoint for Windows, you'll need [add the Developer menu to your PowerPoint ribbon](https://support.microsoft.com/en-us/topic/show-the-developer-tab-e1192344-5e56-4d45-931b-e5fd9bea2d45), by going to File > Options > Customize Ribbon > scroll down the right-hand column and check "Developer". Go to the new Developer menu > click "Macro Security" > "Enable all macros (not recommended; potentially dangerous code can run)"
+
+![Customize Ribbon menu. On the right-hand column, Developer is checked.](/readme_images/enableDeveloper.png)
+_Enabling the Developer menu on Windows._ Check "Developer" on the right-hand column.
+
+On PowerPoint 2016 for Mac, go to: PowerPoint > Preferences > Security & Privacy > Macro Security > "Enable all macros (not recommended; potentially dangerous code can run)"
+
+3. Test run the stimuli in slideshow to make sure all expected functionality is present.
+
+
 
 # Running participants live
 - **Make sure `data.xlsx`, the Excel data sheet, is closed** so PowerPoint can edit it.
@@ -155,7 +177,8 @@ _Viewing the UserForm code._ Here we are looking at the `UserForm` code, specifi
 - You may run multiple participants in the same PowerPoint session, since the code will autoreset the `data` dictionary during initial setup, and `data` is also cleared when you exit slideshow.
 
 
-# Editing the VBA code
+
+# Customizing the VBA code even further if you'd like
 Open VBA in PowerPoint: Developer > Visual Basic.
 
 Useful functions for dealing with the `data` dictionary:
@@ -191,6 +214,13 @@ If you're stuck, here are some VBA resources. Most info online is about Excel, b
 - On scripting dictionary specifically: [Microsoft documentation on the Dictionary object](https://docs.microsoft.com/en-us/office/vba/language/reference/user-interface-help/dictionary-object), [Excel VBA Dictionary](https://excelmacromastery.com/vba-dictionary), [dictionary vs collection vs array](https://stackoverflow.com/questions/32479842/comparison-of-dictionary-collections-and-arrays)
 - StackExchange
 - various ExcelVBA help forums
+
+
+
+# Collaborating and sharing your files
+Some users may find that if you upload the .pptm file to Google Drive (either manually drop into Google Drive on browser, or using Google Drive for Desktop), Google Drive automatically converts it to a .pptx file and removes the macros. You can make sure this auto-conversion is disabled by [going to Google Drive in your web browser](https://drive.google.com/) > click Gear icon at top-right > Settings > make sure "Convert uploaded files to google docs editor format" is NOT checked, [as per this StackExchange post](https://stackoverflow.com/questions/62759230/is-my-vba-code-lost-when-saving-to-google-drive).
+
+
 
 # Future improvements
 Here are some improvements I'm thinking to do. Definitely feel free to put in a feature request for me, or make edits and improvements to the code yourself too!
