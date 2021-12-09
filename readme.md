@@ -144,13 +144,15 @@ _Linking an object to a macro on PowerPoint for Mac._
 
 _Linking an object to a macro._ Here the selected object is linked to the `measure_buttonName_advance1` macro. Note the "Play sound" option if you'd like to play a sound, in addition to running the macro, when the object is clicked.
 
-7. **Open VBA.** On PowerPoint for Windows, open VBA by going to Developer menu > Visual Basic. On PowerPoint for Mac, go to Tools > Macros > Visual Basic Editor.
+7. **Open VBA.** On PowerPoint for Windows, open VBA by going to Developer menu > Visual Basic. On PowerPoint for Mac, go to Tools > Macro > Visual Basic Editor.
 
-8. **Customize the main code**. Go over to the left-hand Project Explorer sidebar. (If you don't see it, Ctrl + R, or View > Project Explorer). Click `Module1` to bring up the main code. Ctrl+F through the code for "TODO" for places you should double-check and customize, e.g. the filepath to the datasheet, the slides to reset for resource allocation if relevant.
+![PowerPoint for Mac with Tools toolbar open, Macro section open, showing options for Macros and Visual Basic](/readme_images/mac_screenshots/macros.png)
+
+8. **Customize the main code**. Go over to the left-hand Project Explorer sidebar. (If you don't see it, Ctrl + R, or View > Project Explorer). Click `Module1` to bring up the main code. **Search (Ctrl+F or Apple+F) through the code for "NOTE"** for places you should double-check and customize, e.g. the filepath to the datasheet, the slides to reset for resource allocation if relevant.
 
 ![View in VBA for Windows looking at Module 1, with SaveToExcel macro selected](/readme_images/VBA.png)
 _A typical view in VBA for Windows._
-![View in VBA for Mac looking at Module 1, with SaveToExcel macro selected](/readme_images/mac-screenshots/VBA.png)
+![View in VBA for Mac looking at Module 1](/readme_images/mac-screenshots/VBA.png)
 _A typical view in VBA for Mac._
 _A typical view in VBA._ Here we are in the code for `Module1`. Note that the Project Manager sidebar is at the top left.
 
@@ -173,11 +175,11 @@ _Viewing the UserForm code._ Here we are looking at the `UserForm` code, specifi
 ## I want to add autocoding functionality to pre-existing stimuli
 If you already have PowerPoint stimuli and a datasheet, and want to add autocoding functionality to that, follow the below steps.
 
-1. Download the code. Note any differences in your project folder structure from the template project folder structure, and check that your datasheet matches the requirements for the datasheet. Enable macros on PowerPoint. (=Follow steps 0-2 for "I want to create new stimuli with autocoding".)
-2. Open the template `stimuli.pptm` in PowerPoint. Open Visual Basic. (=Follow step 7 for "I want to create new stimuli with autocoding".)
-3. In Visual Basic for the template `stimuli.pptm`, export `Dictionary`, `Module1`, and `UserForm` to some location on your computer you'll remember.
-4. Open your own PowerPoint stimuli. Open Visual Basic. Import the `Dictionary`, `Module1`, and `UserForm` that you just exported into your stimuli file.
-5. Create buttons in your PowerPoint stimuli, link them to macros, and customize macro code (including changing the datasheet filepath based on your project folder structure and datasheet name, if relevant). (=Follow steps 4-9 for "I want to create new stimuli with autocoding".)
+1. **Download the code.** Note any differences in your project folder structure from the template project folder structure, and check that your datasheet matches the requirements for the datasheet. **Enable macros on PowerPoint.** (=Follow steps 0-2 for [I want to create new stimuli with autocoding]((#I-want-to-create-new-stimuli-with-autocoding).)
+2. Open the template `stimuli.pptm` in PowerPoint. Open Visual Basic. (=Follow step 7 for [I want to create new stimuli with autocoding]((#I-want-to-create-new-stimuli-with-autocoding).)
+3. In Visual Basic for the template `stimuli.pptm`, **export `Dictionary`, `Module1`, and `UserForm`** to some location on your computer you'll remember.
+4. Open your own PowerPoint stimuli. Open Visual Basic. **Import the `Dictionary`, `Module1`, and `UserForm` that you just exported into your stimuli file.**
+5. **Create buttons in your PowerPoint stimuli, link them to macros, and customize macro code** (including changing the datasheet filepath based on your project folder structure and datasheet name, if relevant). (=Follow steps 4-9 for [I want to create new stimuli with autocoding]((#I-want-to-create-new-stimuli-with-autocoding).)
 
 
 ## I want to run pre-existing autocoding stimuli on a new device
@@ -185,9 +187,9 @@ If you have received pre-existing autocoding-enabled stimuli from someone, and w
 
 1. **Check that your folder structure and filenames match what is expected.** Talk to the person who created the stimuli to find out how you should set up your folder structure. By default, `stimuli.pptm` will search up one directory, and go into a folder called "data" to find a datasheet called `data.xlsx`.
 
-2. **In PowerPoint, make sure macros are enabled.** (=Follow step 2 for "I want to create new stimuli with autocoding".)
+2. **In PowerPoint, enable macros.** (=Follow step 2 for [I want to create new stimuli with autocoding]((#I-want-to-create-new-stimuli-with-autocoding).)
 
-3. Launch a PowerPoint slideshow of the stimuli, and do a test run to make sure all expected functionality is present. (=See "Running participants live" below.)
+3. Do a **test run** by starting a PowerPoint slideshow of the stimuli to make sure all expected functionality is present. (=See [Running participants live](#Running-participants-live).)
 
 
 
@@ -255,7 +257,9 @@ If you're stuck, here are some VBA resources. Most info online is about Excel, b
 
 
 # Collaborating and sharing your files
-Some users may find that if you upload the .pptm file to Google Drive (either manually drop into Google Drive on browser, or using Google Drive for Desktop), Google Drive automatically converts it to a .pptx file and removes the macros. You can make sure this auto-conversion is disabled by [going to Google Drive in your web browser](https://drive.google.com/) > click Gear icon at top-right > Settings > make sure "Convert uploaded files to google docs editor format" is NOT checked, [as per this StackExchange post](https://stackoverflow.com/questions/62759230/is-my-vba-code-lost-when-saving-to-google-drive).
+Some users may find that if you upload the .pptm file to Google Drive (either manually drop into Google Drive on browser, or using Google Drive for Desktop), Google Drive automatically converts it to a .pptx file and removes the macros.
+
+[As per this StackExchange post](https://stackoverflow.com/questions/62759230/is-my-vba-code-lost-when-saving-to-google-drive), you can **disable Google Drive auto-conversion** if you: [go to Google Drive in your web browser](https://drive.google.com/) > click Gear icon at top-right > Settings > make sure "Convert uploaded files to google docs editor format" is *NOT* checked.
 
 
 
