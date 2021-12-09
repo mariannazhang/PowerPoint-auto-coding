@@ -77,7 +77,7 @@ Helper macros to reset target objects on slides (designed for resource allocatio
 ## I want to create new stimuli with autocoding
 If you are creating new stimuli, or have pre-existing study materials that you'd like to add autocoding functionality to, follow the below steps.
 
-0. **Clone/fork this repo**, or **download the files** here as a .zip and unzip them.
+0. **Download these files to your local computer** by either cloning this repository using Git, or clicking the green "Code" button > Download ZIP > unzip on your local computer. **We'll be using `my_project_folder` as your project folder**, so move or rename to wherever/whatever you want your project folder to be.
 - You can rename the `materials` folder and `stimuli.pptm` to anything you want.
 - You can rename the `data` folder and `data.xlsx` to anything you want, or change the folder structure, but make sure to adjust the filepath accordingly in the `SaveToExcel` function so it can find the datasheet.
 
@@ -175,10 +175,14 @@ _Viewing the UserForm code._ Here we are looking at the `UserForm` code, specifi
 ## I want to add autocoding functionality to pre-existing stimuli
 If you already have PowerPoint stimuli and a datasheet, and want to add autocoding functionality to that, follow the below steps.
 
-1. **Download the code.** Note any differences in your project folder structure from the template project folder structure, and check that your datasheet matches the requirements for the datasheet. **Enable macros on PowerPoint.** (=Follow steps 0-2 for [I want to create new stimuli with autocoding](#I-want-to-create-new-stimuli-with-autocoding).)
-2. Open the template `stimuli.pptm` in PowerPoint. Open Visual Basic. (=Follow step 7 for [I want to create new stimuli with autocoding](#I-want-to-create-new-stimuli-with-autocoding).)
-3. In Visual Basic for the template `stimuli.pptm`, **export `Dictionary`, `Module1`, and `UserForm`** to some location on your computer you'll remember.
-4. Open your own PowerPoint stimuli. Open Visual Basic. **Import the `Dictionary`, `Module1`, and `UserForm` that you just exported into your stimuli file.**
+1. **Download the code.** Note any differences in your project folder structure from the template project folder structure in `my_project_folder`, and check that your datasheet matches the requirements for the datasheet. **Enable macros on PowerPoint.** (=Follow steps 0-2 for [I want to create new stimuli with autocoding](#I-want-to-create-new-stimuli-with-autocoding).)
+2. Save your pre-existing PowerPoint stimuli as a `.pptm` file (which is macro-enabled).
+3. Open Visual Basic. (=Follow step 7 for [I want to create new stimuli with autocoding](#I-want-to-create-new-stimuli-with-autocoding).)
+4. **Import the `Dictionary`, `Module1`, and `UserForm` from the `import_for_pre-existing_stimuli` folder into your stimuli file.** Right-click your project in the Project Manager > Import file.. > select each of these files.
+
+![VBA for Windows, showing the right-click menu on a new presentation, with cursor hovering over "Import File..."](readme_images/VBA_import.png)
+_Importing files into VBA._
+
 5. **Create buttons in your PowerPoint stimuli, link them to macros, and customize macro code** (including changing the datasheet filepath based on your project folder structure and datasheet name, if relevant). (=Follow steps 4-9 for [I want to create new stimuli with autocoding](#I-want-to-create-new-stimuli-with-autocoding).)
 
 
