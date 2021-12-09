@@ -3,9 +3,13 @@ This code is for researchers running children in a live supervised setting using
 
 The template slides (`stimuli.pptm`) are adapted from the [online testing slides from Stanford's Social Learning Lab](http://github.com/sociallearninglab/online_testing_materials), and are designed for use by researchers who run live testing sessions by sharing a PowerPoint slideshow on Zoom. The [dictionary custom class](https://github.com/VBA-tools/VBA-Dictionary) was created by Tim Hall.
 
-There is [an hour long basic video demo of this code](https://stanford.zoom.us/rec/share/vdNnPylMm5UP4nQPozZBKW5riLCHA2-70kaw1uvOUkWbNCb6pE-Ob86nrFj5__lm.3sALdzZfGmAkHRZ4?startTime=1610750420000) (recorded January 15, 2021) available, although there are some screen share difficulties in that video demo, and this readme is more up-to-date than the video demo.
+There is [an hour long basic video demo of this code](https://stanford.zoom.us/rec/share/U4gUMXKt0S3QoD9GNI3ojyH0VYxjtWx-qLf-yCaN0hqHdiY-u1ZytaMXaJcm43ec.88-BDUIzLYUgs4pB?startTime=1639008832000) (recorded December 8, 2021) available, although this readme will be more up-to-date than the video demo.
 
 If you would just like to get started, skip down to one of the "Getting started" sections.
+
+* [I want to create new stimuli with autocoding](#I-want-to-create-new-stimuli-with-autocoding)
+* [I want to add autocoding functionality to pre-existing stimuli](#I-want-to-add-autocoding-functionality-to-pre-existing-stimuli)
+* [I want to run pre-existing autocoding stimuli on a new device](#I-want-to-run-pre-existing-autocoding-stimuli-on-a-new-device)
 
 ## Why run children live using PowerPoint
 Microsoft PowerPoint allows researchers to easily present their studies in a rich and engaging format. PowerPoint supports simple animations and sounds that make the experience much more dynamic and engaging, as opposed to filling out a static [Qualtrics](https://www.qualtrics.com/) survey together. **Increased engagement can not only benefit data quality for that study, but also creates a more positive and fun experience that incentivizes parents/guardians and children to return for future studies.**
@@ -49,7 +53,7 @@ Most of the above macros have different versions depending on how you want to ad
 2 important macros everyone will need to use:
 - `Setup`: Initializes `data`, collects some setup info via a UserForm, sets "in_progress" as "yes", and writes setup info to Excel by calling `inProgress_SaveToExcel`, so you can setup and quit slideshow if you'd like before your participant arrives.
   - Customize this macro's associated UserForm based on your study specifics and what setup info you want researchers to input.
-- `SaveToExcel_end`: Calls the function `SaveToExcel`, which saves the scripting dictionary `data` to the Excel datasheet `data.xlsx` by:
+- `SaveToExcel_end`: Calls the function `SaveToExcel`, which saves `data` to the Excel datasheet `data.xlsx` by:
   - Finding the datasheet `data.xlsx`.
   - If header row is empty, assigns the `key`s in the order they were collected.
   - Pick out a target row. Look for a row "in_progress" to continue writing to; otherwise, scan down the first column and pick out the first empty row.
@@ -69,7 +73,8 @@ Helper macros to reset target objects on slides (designed for resource allocatio
 
 
 
-# Getting started: adding autocoding to new or pre-existing stimuli
+# Getting started
+## I want to create new stimuli with autocoding
 If you are creating new stimuli, or have pre-existing study materials that you'd like to add autocoding functionality to, follow the below steps.
 
 0. **Clone/fork this repo**, or **download the files** here as a .zip and unzip them.
@@ -97,6 +102,8 @@ _Enabling the Developer menu on Windows._ Check "Developer" on the right-hand co
 
 On PowerPoint 2016 for Mac, go to: PowerPoint > Preferences > Security & Privacy > Macro Security > "Enable all macros (not recommended; potentially dangerous code can run)"
 
+![Security and Privacy window on PowerPoint for Mac](/readme_images/mac_screenshots/enable_macros.png)
+
 3. **Adapt the template slides** `stimuli.pptm` (`.pptm` means it's macro-enabled) to your stimuli in PowerPoint.
   - If you already have your stimuli slides ready, and you just want to import the autocoding code from `stimuli.pptm`: Open `stimuli.pptm` > go to Developer > Visual Basic > right-click "Module1", "UserForm", "Dictionary" in the left-side project panel under `stimuli.pptm` > Export to somewhere. Then, open your stimuli slides, navigate to the project panel, right-click your stimuli filename > Import the files you just exported. "Module1", "UserForm", "Dictionary" should now show up in the project window.
 
@@ -104,22 +111,36 @@ On PowerPoint 2016 for Mac, go to: PowerPoint > Preferences > Security & Privacy
   - If you have a pre-existing header row in `data.xlsx`, be sure that your slide titles match the *exact* text in the header row, so `SaveToExcel` can appropriately assign participants' responses.
   - Note: two slides can have the same title, but note that if macros on each slide collect the slide title as a `key`, you may overwrite responses to the same `key` (this may not be a problem if participants will only responding on one of the slides, e.g. the 2nd step of a 2 step measure).
 
-5. **Add *object names* to slides where macros collect object names**. Home > Editing > Select > Selection Pane. Double click an object in the Selection Pane to edit its name. If you are counterbalancing the names of objects, remember to change these object names across different counterbalancing slidedecks.
+5. **Add *object names* to slides where macros collect object names**. Open the Selection Pane. On PowerPoint for Windows, go to Home > Editing > Select > Selection Pane. On PowerPoint for Mac, go to Home > Group > Selection Pane.
+
+![PowerPoint for Mac window showing the home tab of the ribbon, with the Group icon selected, and the cursor hovering over the Selection Pane option](/readme_images/mac_screenshots/selection_pane.png)
+_Opening selection pane on PowerPoint for Mac._ On PowerPoint for Mac, go to Home > Group > Selection Pane.
+
+Double click an object in the Selection Pane to edit its name. If you are counterbalancing the names of objects, remember to change these object names across different counterbalancing slidedecks.
 
 ![PowerPoint slide with pictures of blue berries and pink berries, and textbox reading "measure3" just off screen. Outline view is open on the left, showing slide titled measure 2. Selection pane is open on the right, showing objects named blueberries, pinkberries, Title 3, and Title 3.](/readme_images/slide.png)
+_A typical slide on PowerPoint for Windows._
+
+![PowerPoint slide with pictures of blue berries and pink berries, and textbox reading "measure3" just off screen. Outline view is open on the left, showing slide titled measure 2. Selection pane is open on the right, showing objects named blueberries, pinkberries, Title 3, and Title 3.](/readme_images/mac_screenshots/slide.png)
+_A typical slide on PowerPoint for Mac._
+
 _A typical slide._ The slide has a Title, here just off-screen (`measure2`), that gives the slide its title in Outline View. Each response button (here, two pictures) is named in Selection Pane (here, as "blueberries", "pinkberries").
 
   - If you are using `measure_allocation` and its `reset` helper functions, objects that will be moved/counted should have *unique* names containing "target" (e.g. "target1", "target2"). The 2 objects (or groups of objects) that will be reference points for grouping should have names containing "anchor" (e.g. "measure9_lowPerf_anchor"). Note that if you name a group "target" or "anchor", do not also name each sub-object "target" or "anchor".
 
   ![PowerPoint slide with pictures of two schools, one on the left and the other on right side of the screen, and 6 books arranged vertically between them. Outline view is open on the left, showing slide titled measure10. Selection pane is open on the right, showing objects named blueberries, pinkberries, Title 3, and Title 3.](/readme_images/resourceAllocation.png)
-  _A resource allocation slide._ The slide has a Title, here just off-screen (`measure10`), that gives the slide its title in Outline View. In Selection Pane, each target object (here, 6 books) has a *unique* name containing "target", and each anchor object (here, the 2 schools) has a name containing "anchor". Note the three buttons for saving, resuming, and counting the allocation positioned under where the researcher's video thumbnail would go (in this case, top middle).
+  _A resource allocation slide on PowerPoint for Windows._ The slide has a Title, here just off-screen (`measure10`), that gives the slide its title in Outline View. In Selection Pane, each target object (here, 6 books) has a *unique* name containing "target", and each anchor object (here, the 2 schools) has a name containing "anchor". Note the three buttons for saving, resuming, and counting the allocation positioned under where the researcher's video thumbnail would go (in this case, top middle).
 
 6. **Link objects to whatever macros you want to run when the object is clicked.** Select an object > Insert > Action > Mouse click > Run macro > select your macro (e.g. `measure_buttonName_advance1`). Particularly if you are not auto-advancing slides, I recommend you check "Play sound" as well, so the button makes a sound when clicked (to minimize confusion about whether it was clicked already or not).
   - Unfortunately, only single objects can be linked to macros. Groups of objects cannot activate macros. You can link a single object in the group, draw an object on top of all of them, or use an image editor to replace them all with a single image.
   - There's no easy to way to see at a glance if an object is linked to a macro, besides trying to reinsert the macro link, so make sure everything that you want linked is linked!
   - If you have a resource allocation slide, the slide should contain objects/buttons linked to each of 3 macros: `inProgress_SaveToExcel` (save before exiting slideshow), `inProgress_resume` (resume after restarting slideshow), and `measure_allocation` (count the allocation). You should also include the corresponding `reset` at the end of your slideshow so you can reset the target objects for the next participant, and can also include `reset` on the allocation slide itself in case participant wants to re-do the allocation. I recommend hiding all these buttons under wherever your video thumbnail will be, to reduce visual clutter for the participant.
 
-![PowerPoint menu showing options for action button, including Run macro and Play sound](/readme_images/linkToMacro.png)
+![PowerPoint for Windows menu showing options for action button, including Run macro and Play sound](/readme_images/linkToMacro.png)
+_Linking an object to a macro on PowerPoint for Windows._
+
+![PowerPoint for Mac menu showing options for action button, including Run macro and Play sound](/readme_images/mac_screenshots/link_to_macro.png)
+_Linking an object to a macro on PowerPoint for Mac._
 
 _Linking an object to a macro._ Here the selected object is linked to the `measure_buttonName_advance1` macro. Note the "Play sound" option if you'd like to play a sound, in addition to running the macro, when the object is clicked.
 
@@ -127,8 +148,11 @@ _Linking an object to a macro._ Here the selected object is linked to the `measu
 
 8. **Customize the main code**. Go over to the left-hand Project Explorer sidebar. (If you don't see it, Ctrl + R, or View > Project Explorer). Click `Module1` to bring up the main code. Ctrl+F through the code for "TODO" for places you should double-check and customize, e.g. the filepath to the datasheet, the slides to reset for resource allocation if relevant.
 
-![View in VBA looking at Module 1, with SaveToExcel macro selected](/readme_images/VBA.png)
-_A typical view in VBA._ Here we are in the code for `Module1`, specifically the `SaveToExcel` function. Note that the Project Manager sidebar is at the top left.
+![View in VBA for Windows looking at Module 1, with SaveToExcel macro selected](/readme_images/VBA.png)
+_A typical view in VBA for Windows._
+![View in VBA for Mac looking at Module 1, with SaveToExcel macro selected](/readme_images/mac-screenshots/VBA.png)
+_A typical view in VBA for Mac._
+_A typical view in VBA._ Here we are in the code for `Module1`. Note that the Project Manager sidebar is at the top left.
 
 9. **Customize the setup userform**. Go to the left-hand Project Manager sidebar, and right-click `UserForm`.
 
@@ -139,46 +163,59 @@ _Viewing the UserForm object._ Here we are looking at the `UserForm` object, and
 
 - Right-click `UserForm` > View Code to edit the code behind the form, including how the values from each form field are saved to the `data` dictionary.
 
-![View in VBA looking at the UserForm code](/readme_images/VBA_UserForm_code.png)
+![View in VBA for Windows looking at the UserForm code](/readme_images/VBA_UserForm_code.png)
+_Viewing the UserForm code in VBA for Windows._
+![View in VBA for Mac looking at the UserForm code](/readme_images/mac-screenshots/VBA_UserForm_code.png)
+_Viewing the UserForm code in VBA for Mac._
 _Viewing the UserForm code._ Here we are looking at the `UserForm` code, specifically how the UserForm is initialized. Note that the form field `condition` is initialized with specified values for `condition` ("condition1", "condition2", and "condition3") that users can choose from.
 
 
+## I want to add autocoding functionality to pre-existing stimuli
+If you already have PowerPoint stimuli and a datasheet, and want to add autocoding functionality to that, follow the below steps.
 
-# Getting started: setting up your computer to run pre-existing autocoding stimuli
+1. Download the code. Note any differences in your project folder structure from the template project folder structure, and check that your datasheet matches the requirements for the datasheet. Enable macros on PowerPoint. (=Follow steps 0-2 for "I want to create new stimuli with autocoding".)
+2. Open the template `stimuli.pptm` in PowerPoint. Open Visual Basic. (=Follow step 7 for "I want to create new stimuli with autocoding".)
+3. In Visual Basic for the template `stimuli.pptm`, export `Dictionary`, `Module1`, and `UserForm` to some location on your computer you'll remember.
+4. Open your own PowerPoint stimuli. Open Visual Basic. Import the `Dictionary`, `Module1`, and `UserForm` that you just exported into your stimuli file.
+5. Create buttons in your PowerPoint stimuli, link them to macros, and customize macro code (including changing the datasheet filepath based on your project folder structure and datasheet name, if relevant). (=Follow steps 4-9 for "I want to create new stimuli with autocoding".)
+
+
+## I want to run pre-existing autocoding stimuli on a new device
 If you have received pre-existing autocoding-enabled stimuli from someone, and would like to get it ready to run on a new computer, follow the below steps.
 
-1. **Check that your folder structure and filenames match what is expected.** Talk to the person who created the stimuli to find out how you should set up your folder structure. By default, `stimuli.pptm` will search up one level, and in a folder called "data" to find a datasheet called `data.xlsx`.
+1. **Check that your folder structure and filenames match what is expected.** Talk to the person who created the stimuli to find out how you should set up your folder structure. By default, `stimuli.pptm` will search up one directory, and go into a folder called "data" to find a datasheet called `data.xlsx`.
 
-2. **In PowerPoint, make sure macros are enabled.** Macros are usually disabled by default for security reasons.
+2. **In PowerPoint, make sure macros are enabled.** (=Follow step 2 for "I want to create new stimuli with autocoding".)
 
-On PowerPoint for Windows, you'll need [add the Developer menu to your PowerPoint ribbon](https://support.microsoft.com/en-us/topic/show-the-developer-tab-e1192344-5e56-4d45-931b-e5fd9bea2d45), by going to File > Options > Customize Ribbon > scroll down the right-hand column and check "Developer". Go to the new Developer menu > click "Macro Security" > "Enable all macros (not recommended; potentially dangerous code can run)"
-
-![Customize Ribbon menu. On the right-hand column, Developer is checked.](/readme_images/enableDeveloper.png)
-_Enabling the Developer menu on Windows._ Check "Developer" on the right-hand column.
-
-On PowerPoint 2016 for Mac, go to: PowerPoint > Preferences > Security & Privacy > Macro Security > "Enable all macros (not recommended; potentially dangerous code can run)"
-
-3. Test run the stimuli in slideshow to make sure all expected functionality is present.
+3. Launch a PowerPoint slideshow of the stimuli, and do a test run to make sure all expected functionality is present. (=See "Running participants live" below.)
 
 
 
 # Running participants live
-- **Make sure `data.xlsx`, the Excel data sheet, is closed** so PowerPoint can edit it.
-- **Click "Setup" to fill out the setup form before the participant arrives**.
-  - It's recommended to fill out the setup form before the participant arrives, so the participant/guardian are blind to condition. You may exit slideshow after completing the setup form, because `Setup` will save everything to Excel (using `inProgress_SaveToExcel`). When the participant arrives and you restart the slideshow, be sure to click "resume" (`inProgress_resume`) to pick up from where you left off.
+1. **Make sure `data.xlsx`, the Excel data sheet, is closed** so PowerPoint can edit it.
+
+2. **Click "Setup" to fill out the setup form before the participant arrives**.
+  - It's recommended to fill out the setup form before the participant arrives, so the participant/guardian are blind to setup information (e.g. condition). You may exit slideshow after completing the setup form, because `Setup` will save everything to Excel (using `inProgress_SaveToExcel`). When the participant arrives and you restart the slideshow, be sure to click "resume" (`inProgress_resume`) to pick up from where you left off.
   - Alternatively, you can fill out the form with the participant present, but be aware that the participant/guardian may not be blind to condition if they see you filling out the form. Click "pause share" in Zoom to freeze the screen share, click "Setup" to fill out the form, and then click "resume share" in Zoom once you're done with the form. The participant will see a frozen screen while you're filling it out.
-- If you use 2 monitors and see your slideshow on both (e.g. sharing slides, not sharing presenter view), pop-ups will appear on whichever window you click the button. So if you click pop-up buttons like "Setup" on the non-shared screen, pop-up will appear on non-shared screen.
-- You can run your slides and click macros in any order or number of times. Note that if you try to write to the same `key` multiple times, the *last* written response will be the final response.
-- **`data` will be lost if you exit slideshow before running a `SaveToExcel` macro**.
+
+3. You may want to hide pop-up windows (e.g. from `Setup`, or `measure_textEntry_popOut`) from the participant. You have 3 options to do so:
+  - If you use 2 monitors, pop-ups will appear on whichever window you click the button. Click the pop-up button on the screen that is *not* being shared, so that the pop-up will appear on non-shared screen.
+  - If you are in Presenter View and sharing a portion of your screen, drag the pop-up quickly onto a portion of your screen that is not shared.
+  - You can also click "Pause share" on Zoom before you click the pop-up, so the participant's view of your screen will be frozen as it was before. Click "Resume share" on Zoom after you are done with the pop-up.
+
+4. You can run your slides and click macros in any order or number of times. Note that if you try to write to the same `key` multiple times (e.g. the participant changes their mind after you click a button, so you return to the slide and click a different button), the *last* response will be the final response. In other words, the previous response will be overwritten.
+
+5. **`data` will be lost if you exit slideshow before running a `SaveToExcel` macro**.
   - To jump between *slides* without exiting slideshow, right-click anywhere on the slide in slideshow > See all slides > select a slide.
   - To switch between *windows* without exiting slideshow, tab out of slideshow using `Alt + Tab` on Windows or `Cmd + Tab` on Mac, or try swiping left or right on your mousepad with 3 fingers.
   - If the session is ended early, and won't be picked up, jump to the last slide and run `SaveToExcel_end`, or manually set "in_progress" on the datasheet to "no".
   - **Record your sessions!** This code does not replace a recording of your sessions. Be prepared to reference your recording as a backup in case of data loss/premature exit.
-- You may run multiple participants in the same PowerPoint session, since the code will autoreset the `data` dictionary during initial setup, and `data` is also cleared when you exit slideshow.
+
+6. You may run multiple participants in the same PowerPoint session, since the code will autoreset the `data` dictionary during initial setup, and `data` is also cleared when you exit slideshow.
 
 
 
-# Customizing the VBA code even further if you'd like
+# Advanced: customizing the VBA code even further
 Open VBA in PowerPoint: Developer > Visual Basic.
 
 Useful functions for dealing with the `data` dictionary:
