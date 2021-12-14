@@ -65,16 +65,5 @@ Public Sub submit_Click()
     data("condition") = condition.Value     'the condition selected in the setup form
     data("counterbalance") = counterbalance.Value   'the counterbalance version selected in the setup form
     
-    
-    ' Change slides based on form data
-    
-    ' If your different conditions are different between-subjects slides...
-    ' unhide corresponding condition slide
-    ' If condition = "condition1" Then
-    '    ActivePresentation.Slides(2).SlideShowTransition.Hidden = msoFalse
-    ' ElseIf condition = "condition2" Then
-    ' ElseIf condition = "condition3" Then
-    ' End If
-    
     Unload Me
 End Sub

@@ -3,7 +3,7 @@ Attribute VB_Name = "Module1"
 ' README
 ' Documentation: https://github.com/mariannazhang/PowerPoint-auto-coding
 ' To get started: search in here for "TODO" to see anything that you need to customize.
-' In the Project Window on the left, right-click UserForm, and search in there for "TODO" as well.
+' In the Project Window on the left, right-click UserForm, View Code, and search in there for "TODO" as well.
 ' ===========================================================================
 
 
@@ -171,10 +171,8 @@ Public Sub measure_buttonText(oSh As Shape)
     
     ' measure = slide title
     measure = ActivePresentation.SlideShowWindow.View.Slide.Shapes.Title.TextFrame.TextRange.Text
-    MsgBox (measure)
     ' response = button text
     response = oSh.TextFrame.TextRange.Text
-    MsgBox (response)
     
     ' store measure as key, response as value. overwrites previous value if key already exists
     data(measure) = response

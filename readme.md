@@ -148,11 +148,11 @@ _Linking an object to a macro._ Here the selected object is linked to the `measu
 
 ![PowerPoint for Mac with Tools toolbar open, Macro section open, showing options for Macros and Visual Basic](/readme_images/mac_screenshots/macros.png)
 
-8. **Customize the main code**. Go over to the left-hand Project Explorer sidebar. (If you don't see it, Ctrl + R, or View > Project Explorer). Click `Module1` to bring up the main code. **Search (Ctrl+F or Apple+F) through the code for "NOTE"** for places you should double-check and customize, e.g. the filepath to the datasheet, the slides to reset for resource allocation if relevant.
+8. **Customize the main code**. Go over to the left-hand Project Explorer sidebar. (If you don't see it, Ctrl + R, or View > Project Explorer). Click `Module1` to bring up the main code. **Search (Ctrl+F or Apple+F) through the code for "TODO"** for places you should double-check and customize, e.g. the filepath to the datasheet, the slides to reset for resource allocation if relevant.
 
 ![View in VBA for Windows looking at Module 1, with SaveToExcel macro selected](/readme_images/VBA.png)
 _A typical view in VBA for Windows._
-![View in VBA for Mac looking at Module 1](/readme_images/mac-screenshots/VBA.png)
+![View in VBA for Mac looking at Module 1](/readme_images/mac_screenshots/VBA.png)
 _A typical view in VBA for Mac._
 _A typical view in VBA._ Here we are in the code for `Module1`. Note that the Project Manager sidebar is at the top left.
 
@@ -160,25 +160,34 @@ _A typical view in VBA._ Here we are in the code for `Module1`. Note that the Pr
 
 - Right-click `UserForm` > View Object to [edit the fields and aesthetics of the form](https://docs.microsoft.com/en-us/office/vba/powerpoint/how-to/create-custom-dialog-boxes). View > Toolbox to insert new fields: `TextBox` accepts any value, `ListBox` requires selecting from pre-specified values, `ComboBox` suggests pre-specified values but accepts other values too. Click on a field to see/edit its name on the sidebar; you will need to know its name to reference its value in the form code.
 
-![View in VBA looking at the UserForm object](/readme_images/VBA_UserForm_object.png)
+- *NOTE*: Known issue documented Dec 2021: on VBA for Mac, you may not be able to view the UserForm object to edit the graphical appearance of the form (e.g. which form fields there are, what the fields are called), but you can still edit the UserForm code (e.g. what the field options are, what happens with the field option). This appears to be an issue specific to Microsoft Office for Mac 2016, and does not exist on Microsoft Office for Mac 2011. 
+
+![View in VBA for Windows looking at the UserForm object](/readme_images/VBA_UserForm_object.png)
 _Viewing the UserForm object._ Here we are looking at the `UserForm` object, and can move around the fields, change how the fields look, and change how the form generally looks. At bottom we have the Toolbox, with which we can add new textboxes or fields (View > Toolbox if you can't see the Toolbox menu). At bottom left is the Properties menu, where we can see that the selected field is a `ListBox` object (`ListBox` only accepts specified values) named `condition`.
 
 - Right-click `UserForm` > View Code to edit the code behind the form, including how the values from each form field are saved to the `data` dictionary.
 
 ![View in VBA for Windows looking at the UserForm code](/readme_images/VBA_UserForm_code.png)
 _Viewing the UserForm code in VBA for Windows._
-![View in VBA for Mac looking at the UserForm code](/readme_images/mac-screenshots/VBA_UserForm_code.png)
+![View in VBA for Mac looking at the UserForm code](/readme_images/mac_screenshots/VBA_UserForm_code.png)
 _Viewing the UserForm code in VBA for Mac._
-_Viewing the UserForm code._ Here we are looking at the `UserForm` code, specifically how the UserForm is initialized. Note that the form field `condition` is initialized with specified values for `condition` ("condition1", "condition2", and "condition3") that users can choose from.
+_Viewing the UserForm code._ Here we are looking at the `UserForm` code, specifically how the UserForm is initialized. Note that the form field `condition` is initialized with specified values for `condition` ("condition1", "condition2", and "condition3") that researchers can choose from.
 
 
 ## I want to add autocoding functionality to pre-existing stimuli
 If you already have PowerPoint stimuli and a datasheet, and want to add autocoding functionality to that, follow the below steps.
 
+## I want to add autocoding functionality to pre-existing stimuli on Mac
+1. **Download the code.** Note any differences in your project folder structure from the template project folder structure in `my_project_folder`, and check that your datasheet matches the requirements for the datasheet. **Enable macros on PowerPoint.** (=Follow steps 0-2 for [I want to create new stimuli with autocoding](#I-want-to-create-new-stimuli-with-autocoding).)
+2. Copy paste your stimuli slides into `stimuli.pptm` to use `stimuli.pptm` and its associated code as your stimuli. Replace your original stimuli file with `stimuli.pptm` (feel free to rename).
+3. **Create buttons in your PowerPoint stimuli, link them to macros, and customize macro code** (including changing the datasheet filepath based on your project folder structure and datasheet name, if relevant). (=Follow steps 4-9 for [I want to create new stimuli with autocoding](#I-want-to-create-new-stimuli-with-autocoding).)
+
+
+## I want to add autocoding functionality to pre-existing stimuli on Windows
 1. **Download the code.** Note any differences in your project folder structure from the template project folder structure in `my_project_folder`, and check that your datasheet matches the requirements for the datasheet. **Enable macros on PowerPoint.** (=Follow steps 0-2 for [I want to create new stimuli with autocoding](#I-want-to-create-new-stimuli-with-autocoding).)
 2. Save your pre-existing PowerPoint stimuli as a `.pptm` file (which is macro-enabled).
 3. Open Visual Basic. (=Follow step 7 for [I want to create new stimuli with autocoding](#I-want-to-create-new-stimuli-with-autocoding).)
-4. **Import the `Dictionary`, `Module1`, and `UserForm` from the `import_for_pre-existing_stimuli` folder into your stimuli file.** Right-click your project in the Project Manager > Import file.. > select each of these files.
+4. **Import the `Dictionary`, `Module1`, and `UserForm` from the `import_for_pre-existing_stimuli` folder into your stimuli file.** Right-click your project in the Project Manager > Import file.. > select each of these files. Make sure you can open each of them (for UserForm, both the object and the code).
 
 ![VBA for Windows, showing the right-click menu on a new presentation, with cursor hovering over "Import File..."](readme_images/VBA_import.png)
 _Importing files into VBA._
@@ -200,7 +209,7 @@ If you have received pre-existing autocoding-enabled stimuli from someone, and w
 # Running participants live
 1. **Make sure `data.xlsx`, the Excel data sheet, is closed** so PowerPoint can edit it.
 
-2. **Click "Setup" to fill out the setup form before the participant arrives**.
+2. **Click "Setup" to fill out the setup form before the participant arrives**. Note that this process may take a few seconds on Mac.
   - It's recommended to fill out the setup form before the participant arrives, so the participant/guardian are blind to setup information (e.g. condition). You may exit slideshow after completing the setup form, because `Setup` will save everything to Excel (using `inProgress_SaveToExcel`). When the participant arrives and you restart the slideshow, be sure to click "resume" (`inProgress_resume`) to pick up from where you left off.
   - Alternatively, you can fill out the form with the participant present, but be aware that the participant/guardian may not be blind to condition if they see you filling out the form. Click "pause share" in Zoom to freeze the screen share, click "Setup" to fill out the form, and then click "resume share" in Zoom once you're done with the form. The participant will see a frozen screen while you're filling it out.
 
